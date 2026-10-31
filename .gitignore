@@ -1,0 +1,24 @@
+## Visual Studio & .NET build artifacts
+.vs/
+bin/
+obj/
+TestResults/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Logging
+logs/
+*.log
+
+## Secrets & Local Configurations
+appsettings.Production.json
+appsettings.Local.json
+*.secrets.json
+secrets/
+
+## Temporary files
+*.tmp
+*.temp
+[Tt]emp/

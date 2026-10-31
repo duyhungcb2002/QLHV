@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MSTest" Version="4.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\QLHV.Contracts\QLHV.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\QLHV.Core\QLHV.Core.csproj" />
+    <ProjectReference Include="..\..\src\QLHV.Features.Catalog\QLHV.Features.Catalog.csproj" />
+    <ProjectReference Include="..\..\src\QLHV.WinForms\QLHV.WinForms.csproj" />
+  </ItemGroup>
+
+</Project>
