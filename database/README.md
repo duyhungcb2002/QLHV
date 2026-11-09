@@ -1,7 +1,7 @@
 # Hướng Dẫn Cơ Sở Dữ Liệu SQL Server (QLHV)
 
-> **Trạng thái kiểm chứng hiện tại:**  
-> Các script trong thư mục này (`001_schema.sql` và `002_seed.sql`) thuộc giai đoạn **SQL-01A**, đã được rà soát tĩnh (static review) đối chiếu với DTO và Repository Interface hiện có.  
+> **Trạng thái kiểm chứng hiện tại:**
+> Các script trong thư mục này (`001_schema.sql` và `002_seed.sql`) thuộc giai đoạn **SQL-01A**, đã được rà soát tĩnh (static review) đối chiếu với DTO và Repository Interface hiện có.
 > Máy phát triển hiện tại **chưa cài đặt SQL Server / LocalDB / `sqlcmd`**, do đó các script **chưa được kiểm chứng runtime trên SQL Server thực tế**.
 
 ---
@@ -127,4 +127,3 @@ sqlcmd -S localhost -d QLHV_Test -E -i database\002_seed.sql -b
 - **Cảnh báo dữ liệu mẫu (Seed):** File `002_seed.sql` **chỉ dành riêng cho mục đích demo và kiểm thử nội bộ**. Tuyệt đối không chạy script dữ liệu mẫu này lên database sản xuất (production). Khi đưa vào triển khai thật, bắt buộc phải xóa bỏ hoặc thay đổi mật khẩu toàn bộ các tài khoản demo (`admin`, `daotao`, `thungan`, `giangvien`, `quanly`, `bikhoa`).
 - **Cấu hình chứng chỉ kết nối:** Thuộc tính `TrustServerCertificate=True` trong chuỗi kết nối mẫu chỉ dành riêng cho môi trường phát triển / LocalDB cục bộ, tuyệt đối không áp dụng trên môi trường production nếu không có chứng chỉ TLS/SSL hợp lệ.
 - **Bảo mật chuỗi kết nối:** Tuyệt đối không đưa chuỗi kết nối thật (connection string chứa server nội bộ, mật khẩu SQL Server thật) lên Git. Sử dụng file `appsettings.Local.json` (đã được cấu hình trong `.gitignore`) cho các thiết lập cục bộ.
-

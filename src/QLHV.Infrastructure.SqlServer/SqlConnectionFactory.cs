@@ -35,4 +35,3 @@ public sealed class SqlConnectionFactory : IConnectionFactory
         return new SqlConnection(_connectionString);
     }
 }
-

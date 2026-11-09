@@ -97,4 +97,3 @@ public class SessionIntegrityTests
         Assert.IsFalse(_currentUserService.HasPermission(Permission.CatalogView));
     }
 }
-
