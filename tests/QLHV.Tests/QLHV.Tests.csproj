@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\QLHV.Contracts\QLHV.Contracts.csproj" />
     <ProjectReference Include="..\..\src\QLHV.Core\QLHV.Core.csproj" />
+    <ProjectReference Include="..\..\src\QLHV.Infrastructure.SqlServer\QLHV.Infrastructure.SqlServer.csproj" />
     <ProjectReference Include="..\..\src\QLHV.Features.Catalog\QLHV.Features.Catalog.csproj" />
     <ProjectReference Include="..\..\src\QLHV.WinForms\QLHV.WinForms.csproj" />
   </ItemGroup>

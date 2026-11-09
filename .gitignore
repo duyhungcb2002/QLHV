@@ -14,11 +14,26 @@ logs/
 
 ## Secrets & Local Configurations
 appsettings.Production.json
+appsettings.Development.json
 appsettings.Local.json
+appsettings.*.Local.json
+*.local.json
 *.secrets.json
 secrets/
+*.env
+
+## Local Database Files
+*.mdf
+*.ldf
+*.ndf
+*.bak
+*.db
+*.sqlite
+*.sqlite3
 
 ## Temporary files
 *.tmp
 *.temp
+*.swp
+*~
 [Tt]emp/

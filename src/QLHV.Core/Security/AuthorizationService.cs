@@ -71,7 +71,7 @@ public class AuthorizationService : IAuthorizationService
     {
         if (RolePermissionMap.TryGetValue(role, out var permissions))
         {
-            return permissions;
+            return new HashSet<Permission>(permissions);
         }
         return Array.Empty<Permission>();
     }
@@ -102,7 +102,7 @@ public class CurrentUserService : ICurrentUserService
         _authorizationService = authorizationService;
     }
 
-    public TaiKhoanDto? CurrentUser => _currentUser;
+    public TaiKhoanDto? CurrentUser => _currentUser == null ? null : Clone(_currentUser);
 
     public bool IsAuthenticated => _currentUser != null;
 
@@ -114,11 +114,25 @@ public class CurrentUserService : ICurrentUserService
 
     public void SetCurrentUser(TaiKhoanDto user)
     {
-        _currentUser = user ?? throw new ArgumentNullException(nameof(user));
+        if (user == null) throw new ArgumentNullException(nameof(user));
+        _currentUser = Clone(user);
     }
 
     public void Clear()
     {
         _currentUser = null;
+    }
+
+    private static TaiKhoanDto Clone(TaiKhoanDto src)
+    {
+        return new TaiKhoanDto
+        {
+            Id = src.Id,
+            TenDangNhap = src.TenDangNhap,
+            VaiTro = src.VaiTro,
+            GiangVienId = src.GiangVienId,
+            TrangThai = src.TrangThai,
+            LanDangNhapCuoi = src.LanDangNhapCuoi
+        };
     }
 }

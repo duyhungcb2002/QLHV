@@ -34,7 +34,16 @@ Dự án được xây dựng với kiến trúc hướng dịch vụ nhiều t�
   - `FrmPhongHoc` & `FrmPhongHocEdit`: Quản lý danh mục phòng học & sức chứa.
   - `FrmBaoCaoMau`: Mẫu giao diện báo cáo chuẩn (dùng lại được) sẵn sàng cho Chu Đức.
 - **Logging an toàn**: `FileAppLogger` tự động ghi log vào thư mục `logs/`, lọc mật khẩu và connection string, không gây crash ứng dụng.
-- **Hệ thống Kiểm thử tự động (Unit Tests)**: 44/44 bài test MSTest bao phủ toàn diện Auth, Phân quyền UI, CRUD, Validation nghiệp vụ và Kiểm thử phân quyền độc lập tại tầng Service cho toàn bộ 6 Service Catalog.
+- **Hệ thống Kiểm thử tự động (Unit Tests)**: 60/60 bài test MSTest bao phủ toàn diện Auth, Phân quyền UI, Bảo vệ bất biến ma trận quyền & phiên đăng nhập (`SEC-01`), Hạ tầng `SqlConnectionFactory` (`SQL-01A`), CRUD, Validation nghiệp vụ và Kiểm thử phân quyền độc lập tại tầng Service cho toàn bộ 6 Service Catalog.
+- **Cập nhật giai đoạn `SEC-01 + SQL-01A`**:
+  - **`SEC-01` (Bảo vệ ma trận quyền và phiên đăng nhập)**: `AuthorizationService.GetPermissions()` trả về bản sao độc lập (defensive copy), ngăn sửa đổi ma trận quyền nội bộ từ bên ngoài; `CurrentUserService` tạo bản sao phòng vệ khi lưu (`SetCurrentUser`) và khi đọc (`CurrentUser`), ngăn leo thang đặc quyền qua việc sửa DTO từ bên ngoài.
+  - **`SQL-01A` (Hạ tầng kết nối, Schema & Seed SQL Server)**: Đã khởi tạo project `src/QLHV.Infrastructure.SqlServer` với `SqlConnectionFactory` và `SqlServerOptions`, tạo script `database/001_schema.sql` (khóa collation `Vietnamese_100_CI_AI`), `database/002_seed.sql` (kèm tài khoản test bị khóa `bikhoa`), `database/README.md` và cấu hình mẫu `src/QLHV.WinForms/appsettings.sample.json`.
+  - **Trạng thái thực thi hiện tại**:
+    - Ứng dụng hiện vẫn chạy bằng **Fake Repository** (In-Memory).
+    - **Chưa có SQL Repository** (`SqlTaiKhoanRepository`, `SqlHocVienRepository`, ...).
+    - `Program.cs` **chưa được nối sang SQL**.
+    - SQL persistence **chưa hoàn thành** và **SQL runtime chưa được xác minh** do môi trường hiện tại chưa cài đặt SQL Server.
+    - Bước tiếp theo là giai đoạn **`SQL-01B`** (triển khai các SQL Repository và kết nối cấu hình).
 
 ---
 
@@ -54,11 +63,13 @@ Dự án được xây dựng với kiến trúc hướng dịch vụ nhiều t�
 ```text
 QLHV/
 ├── QLHV.sln
+├── database/                     # Script CSDL SQL Server (001_schema.sql, 002_seed.sql, README.md)
 ├── src/
 │   ├── QLHV.Contracts/           # Enums, DTOs, Filters, OperationResult, ErrorCodes
 │   ├── QLHV.Core/                # Abstractions, Repositories/Services Interfaces, Security, Logging, Validation
+│   ├── QLHV.Infrastructure.SqlServer/ # SqlConnectionFactory & SqlServerOptions (giai đoạn SQL-01A)
 │   ├── QLHV.Features.Catalog/    # In-memory fake repositories & Services triển khai quy tắc nghiệp vụ
-│   └── QLHV.WinForms/            # Giao diện Forms, UserControls, Composition Root (Program.cs)
+│   └── QLHV.WinForms/            # Giao diện Forms, UserControls, Composition Root (Program.cs), appsettings.sample.json
 ├── tests/
 │   └── QLHV.Tests/               # Bộ kiểm thử đơn vị MSTest cho Auth, Authorization, Catalog CRUD & Validation
 ├── README.md                     # Tài liệu tổng quan và hướng dẫn chạy hệ thống
@@ -142,7 +153,7 @@ dotnet run --project src\QLHV.WinForms\QLHV.WinForms.csproj
 cd D:\HMNU\Laptrinhwindow\QLHV
 dotnet test tests\QLHV.Tests\QLHV.Tests.csproj
 ```
-Kết quả chạy: **44/44 tests PASSED (100%)** (gồm 27 test Auth, WinForms UI Smoke, Catalog Validation & CRUD + 17 test phân quyền trực tiếp tại tầng Service cho toàn bộ 6 Service Catalog).
+Kết quả chạy: **60/60 tests PASSED (100%)** (gồm Auth, WinForms UI Smoke, Catalog Validation & CRUD, Service Authorization, Session & Matrix immutability, và SqlConnectionFactory).
 
 ---
 
@@ -172,35 +183,40 @@ Kết quả chạy: **44/44 tests PASSED (100%)** (gồm 27 test Auth, WinForms 
 
 ---
 
-## 12. Hướng dẫn thay thế In-Memory Repository bằng ADO.NET SQL Server (Dành cho Chu Đức)
+## 12. Hướng dẫn thay thế In-Memory Repository bằng ADO.NET SQL Server (Kế hoạch giai đoạn SQL-01B)
 
-Kiến trúc đã được chuẩn bị sẵn 100% để Chu Đức cắm ADO.NET SQL Server vào mà không cần chạm vào UI hay Service:
+Hạ tầng nền tảng SQL Server giai đoạn `SQL-01A` đã hoàn tất:
+- Project hạ tầng `src/QLHV.Infrastructure.SqlServer` đã được tạo và kiểm thử đơn vị.
+- Class `SqlConnectionFactory : IConnectionFactory` và `SqlServerOptions` đã tồn tại.
+- Database scripts (`database/001_schema.sql` khóa collation `Vietnamese_100_CI_AI`, `database/002_seed.sql` chứa tài khoản hash PBKDF2) và file cấu hình mẫu `src/QLHV.WinForms/appsettings.sample.json` đã tồn tại.
 
-1. **Chu Đức tạo implementation ADO.NET**:
-   - Viết class `SqlConnectionFactory : IConnectionFactory` để tạo `SqlConnection` dựa trên connection string.
-   - Viết các class Repository kế thừa interface trong `QLHV.Core.Repositories`:
-     - `SqlHocVienRepository : IHocVienRepository`
-     - `SqlGiangVienRepository : IGiangVienRepository`
-     - `SqlMonHocRepository : IMonHocRepository`
-     - `SqlKhoaHocRepository : IKhoaHocRepository`
-     - `SqlKhoaHocMonHocRepository : IKhoaHocMonHocRepository`
-     - `SqlPhongHocRepository : IPhongHocRepository`
-     - `SqlTaiKhoanRepository : ITaiKhoanRepository`
-2. **Thay thế tại Composition Root (`Program.cs`)**:
-   - Mở `src\QLHV.WinForms\Program.cs`.
-   - Đổi dòng:
-     ```csharp
-     IHocVienRepository hocVienRepository = new FakeHocVienRepository();
-     ```
-     Thành:
-     ```csharp
-     IHocVienRepository hocVienRepository = new SqlHocVienRepository(connectionFactory);
-     ```
-   - **Tất cả các Forms và Services hoạt động bình thường, không cần sửa đổi bất kỳ dòng code nào khác.**
+Các hạng mục **chưa triển khai** (thuộc giai đoạn `SQL-01B`):
+1. **Triển khai 7 SQL Repositories** kế thừa interface trong `QLHV.Core.Repositories`:
+   - `SqlHocVienRepository : IHocVienRepository`
+   - `SqlGiangVienRepository : IGiangVienRepository`
+   - `SqlMonHocRepository : IMonHocRepository`
+   - `SqlKhoaHocRepository : IKhoaHocRepository`
+   - `SqlKhoaHocMonHocRepository : IKhoaHocMonHocRepository`
+   - `SqlPhongHocRepository : IPhongHocRepository`
+   - `SqlTaiKhoanRepository : ITaiKhoanRepository`
+2. **Cơ chế đọc cấu hình và Composition Root (`Program.cs`)**:
+   - Hiện tại `Program.cs` **vẫn khởi tạo 100% Fake Repository** và chưa được nối sang SQL Server.
+   - Việc chuyển đổi và wiring thực tế giữa `Fake` và `SqlServer` sẽ được thực hiện tại `SQL-01B`.
+3. **Kiểm thử tích hợp SQL (Integration Tests)**:
+   - Sẽ kiểm chứng trên môi trường SQL Server thật tại giai đoạn `SQL-01B`. Không khẳng định các Form và Service chắc chắn hoạt động ổn định với SQL Server khi chưa có kết quả kiểm thử tích hợp runtime thực tế.
 
 ---
 
-## 13. Bảng trạng thái công việc (DH-01 đến DH-08)
+## 13. Prerequisite cho giai đoạn SQL-01B
+
+Trước khi nối SQL Repository vào ứng dụng:
+- **Validation độ dài tại tầng Service**: Các giới hạn độ dài ký tự trong schema (ví dụ: `MaHocVien NVARCHAR(20)`, `HoTen NVARCHAR(100)`, `Email NVARCHAR(150)`, `DiaChi NVARCHAR(250)`, `TenMonHoc NVARCHAR(150)`, `MoTa NVARCHAR(500)`, `ChuyenMon NVARCHAR(200)`) phải được phản ánh thành các quy tắc kiểm tra tính hợp lệ (validation) tương ứng tại các Service Catalog.
+- Cần bổ sung unit test kiểm tra các giá trị vượt quá độ dài quy định cho các trường mã, tên, email, địa chỉ, mô tả và chuyên môn.
+- Sau khi hoàn thành kiểm thử validation mới kết nối SQL Repository vào Composition Root.
+
+---
+
+## 14. Bảng trạng thái công việc (DH-01 đến DH-08)
 
 | Mã CV | Nội dung công việc | Trạng thái | Lý do / Ghi chú |
 |---|---|---|---|
@@ -215,7 +231,7 @@ Kiến trúc đã được chuẩn bị sẵn 100% để Chu Đức cắm ADO.NE
 
 ---
 
-## 14. Ranh giới trách nhiệm của 4 thành viên
+## 15. Ranh giới trách nhiệm của 4 thành viên
 
 1. **Duy Hưng (Team Lead / Core Architecture)**:
    - Kiến trúc giải pháp, Contracts dùng chung, Core Abstractions.
@@ -234,14 +250,15 @@ Kiến trúc đã được chuẩn bị sẵn 100% để Chu Đức cắm ADO.NE
 
 ---
 
-## 15. Đầu vào đang cần từ Bá Hiệp và Chu Đức
+## 16. Đầu vào đang cần từ Bá Hiệp và Chu Đức
 
 ### Cần Chu Đức cung cấp:
-- [ ] Schema CSDL chính thức (File `.sql` tạo bảng, khóa chính, khóa ngoại).
-- [ ] Quy ước đặt tên bảng và cột (khuyến nghị đồng nhất với tên thuộc tính trong `QLHV.Contracts.Dtos`).
-- [ ] Script dữ liệu mẫu SQL (`Seed.sql`).
-- [ ] File chuỗi kết nối mẫu không chứa mật khẩu thực (`appsettings.sample.json`).
-- [ ] Triển khai các ADO.NET Repositories thực tế theo các interface trong `QLHV.Core.Repositories`.
+- [x] Schema CSDL chính thức (`database/001_schema.sql` - đã hoàn thành ở `SQL-01A`).
+- [x] Quy ước đặt tên bảng và cột (đồng nhất với DTO trong `QLHV.Contracts.Dtos` - đã xong).
+- [x] Script dữ liệu mẫu SQL (`database/002_seed.sql` - đã hoàn thành ở `SQL-01A`).
+- [x] File chuỗi kết nối mẫu không chứa mật khẩu thực (`appsettings.sample.json` - đã xong).
+- [ ] Triển khai 7 ADO.NET Repositories thực tế theo các interface trong `QLHV.Core.Repositories` (Giai đoạn `SQL-01B`).
+- [ ] Kiểm thử tích hợp SQL trên CSDL thật (SQL runtime integration tests - Giai đoạn `SQL-01B`).
 
 ### Cần Bá Hiệp cung cấp:
 - [ ] Các DTOs và Contracts cho module Training (Lớp học, Phiếu thu, Điểm số).

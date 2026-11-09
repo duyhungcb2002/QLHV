@@ -68,4 +68,52 @@ public class AuthorizationTests
         Assert.IsFalse(_authzService.HasPermission(VaiTro.QUANLY, Permission.CatalogManage));
         Assert.IsFalse(_authzService.HasPermission(VaiTro.QUANLY, Permission.TuitionManage));
     }
+
+    [TestMethod]
+    public void GetPermissions_ReturnsDefensiveCopy_ExternalMutationDoesNotAffectMatrix()
+    {
+        // 1. Lấy quyền của vai trò DAOTAO và ADMIN bằng GetPermissions()
+        var daoTaoPermissions = _authzService.GetPermissions(VaiTro.DAOTAO);
+        var adminPermissions = _authzService.GetPermissions(VaiTro.ADMIN);
+
+        Assert.AreNotSame(daoTaoPermissions, _authzService.GetPermissions(VaiTro.DAOTAO));
+        Assert.AreNotSame(adminPermissions, _authzService.GetPermissions(VaiTro.ADMIN));
+
+        // 2. Thử sửa collection nhận được nếu kiểu collection cho phép
+        if (daoTaoPermissions is ICollection<Permission> mutableDaoTao && !mutableDaoTao.IsReadOnly)
+        {
+            mutableDaoTao.Add(Permission.UserManage);
+            mutableDaoTao.Add(Permission.TuitionManage);
+            mutableDaoTao.Remove(Permission.CatalogView);
+        }
+
+        if (adminPermissions is ICollection<Permission> mutableAdmin && !mutableAdmin.IsReadOnly)
+        {
+            mutableAdmin.Clear();
+        }
+
+        // 3 & 4. Gọi lại HasPermission() và GetPermissions() - Ma trận quyền nội bộ vẫn không đổi
+        var freshDaoTaoPermissions = _authzService.GetPermissions(VaiTro.DAOTAO);
+        Assert.HasCount(4, freshDaoTaoPermissions);
+        Assert.IsTrue(_authzService.HasPermission(VaiTro.DAOTAO, Permission.CatalogView));
+        Assert.IsTrue(_authzService.HasPermission(VaiTro.DAOTAO, Permission.CatalogManage));
+        Assert.IsTrue(_authzService.HasPermission(VaiTro.DAOTAO, Permission.TrainingView));
+        Assert.IsTrue(_authzService.HasPermission(VaiTro.DAOTAO, Permission.TrainingManage));
+
+        // 5. ADMIN vẫn có toàn bộ quyền ban đầu
+        var allPermissions = Enum.GetValues<Permission>();
+        var freshAdminPermissions = _authzService.GetPermissions(VaiTro.ADMIN);
+        Assert.HasCount(allPermissions.Length, freshAdminPermissions);
+        foreach (var p in allPermissions)
+        {
+            Assert.IsTrue(_authzService.HasPermission(VaiTro.ADMIN, p), $"ADMIN must retain permission {p}");
+        }
+
+        // 6. Các vai trò khác không nhận thêm quyền trái phép
+        Assert.IsFalse(_authzService.HasPermission(VaiTro.DAOTAO, Permission.UserManage));
+        Assert.IsFalse(_authzService.HasPermission(VaiTro.DAOTAO, Permission.TuitionManage));
+        Assert.IsFalse(_authzService.HasPermission(VaiTro.THUNGAN, Permission.UserManage));
+        Assert.IsFalse(_authzService.HasPermission(VaiTro.GIANGVIEN, Permission.UserManage));
+        Assert.IsFalse(_authzService.HasPermission(VaiTro.QUANLY, Permission.UserManage));
+    }
 }
