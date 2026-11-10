@@ -1,7 +1,22 @@
 /* ============================================================================
    QLHV - Hệ Thống Quản Lý Học Viên
    File: database/001_schema.sql
-   Giai đoạn: SQL-01A (Schema cho chức năng Đăng nhập và 6 Danh mục hiện có)
+   Giai đoạn: SQL-01B1 (Schema cho chức năng Đăng nhập và 6 Danh mục hiện có)
+   Lưu ý quan trọng:
+     - Đây là script khởi tạo database mới, không phải migration.
+     - Nếu database hoặc bảng đã tồn tại từ schema cũ, chạy lại script không tự đổi collation.
+     - Không chứa lệnh xóa database.
+     - Không chứa chuỗi kết nối.
+     - Tên cột ánh xạ trực tiếp với DTO trong QLHV.Contracts.Dtos và Repository Interface.
+     - Trạng thái: 1 = Đang hoạt động / Hoạt động, 0 = Ngừng hoạt động / Bị khóa.
+     - Phân định Collation:
+       1) Vietnamese_100_CI_AI: Các trường tìm kiếm nội dung tiếng Việt không dấu (Họ tên,
+          Tên môn học, Tên khóa học, Tên phòng, Chuyên môn, Địa chỉ, Mô tả).
+       2) Vietnamese_100_CI_AS: Các trường định danh nghiệp vụ (TenDangNhap, MaHocVien,
+          MaGiangVien, MaMonHoc, MaKhoaHoc, MaPhong, Email, DienThoai) để không phân biệt
+          hoa/thường nhưng phân biệt dấu chính xác ('hung' != 'hùng').
+       3) Latin1_General_100_BIN2: Các trường token chính xác và hash mật khẩu (VaiTro,
+          MatKhauHash) để CHECK constraint và so sánh token/hash tuyệt đối chính xác.
    Danh sách bảng:
      1. GiangVien
      2. TaiKhoan
@@ -10,14 +25,6 @@
      5. KhoaHoc
      6. KhoaHocMonHoc
      7. PhongHoc
-   Lưu ý:
-     - Không chứa lệnh xóa database.
-     - Không chứa chuỗi kết nối.
-     - Tên cột ánh xạ trực tiếp với DTO trong QLHV.Contracts.Dtos và Repository Interface.
-     - Trạng thái: 1 = Đang hoạt động / Hoạt động, 0 = Ngừng hoạt động / Bị khóa.
-     - Collation: Sử dụng thống nhất Vietnamese_100_CI_AI cho các trường NVARCHAR nghiệp vụ
-       (mã, username, họ tên, tìm kiếm) để không phụ thuộc vào collation mặc định của server,
-       đảm bảo không phân biệt hoa/thường (CI) và không dấu/có dấu (AI).
    ============================================================================ */
 
 SET NOCOUNT ON;
@@ -31,11 +38,11 @@ BEGIN
     CREATE TABLE dbo.GiangVien
     (
         Id          INT                                           IDENTITY(1,1) NOT NULL,
-        MaGiangVien NVARCHAR(20)  COLLATE Vietnamese_100_CI_AI    NOT NULL,
+        MaGiangVien NVARCHAR(20)  COLLATE Vietnamese_100_CI_AS    NOT NULL,
         HoTen       NVARCHAR(100) COLLATE Vietnamese_100_CI_AI    NOT NULL,
         ChuyenMon   NVARCHAR(200) COLLATE Vietnamese_100_CI_AI    NULL,
-        DienThoai   NVARCHAR(20)  COLLATE Vietnamese_100_CI_AI    NULL,
-        Email       NVARCHAR(150) COLLATE Vietnamese_100_CI_AI    NULL,
+        DienThoai   NVARCHAR(20)  COLLATE Vietnamese_100_CI_AS    NULL,
+        Email       NVARCHAR(150) COLLATE Vietnamese_100_CI_AS    NULL,
         TrangThai   INT                                           NOT NULL CONSTRAINT DF_GiangVien_TrangThai DEFAULT (1),
 
         CONSTRAINT PK_GiangVien PRIMARY KEY CLUSTERED (Id),
@@ -65,9 +72,9 @@ BEGIN
     CREATE TABLE dbo.TaiKhoan
     (
         Id              INT                                           IDENTITY(1,1) NOT NULL,
-        TenDangNhap     NVARCHAR(50)  COLLATE Vietnamese_100_CI_AI    NOT NULL,
-        MatKhauHash     NVARCHAR(256)                                 NOT NULL,
-        VaiTro          NVARCHAR(30)  COLLATE Vietnamese_100_CI_AI    NOT NULL,
+        TenDangNhap     NVARCHAR(50)  COLLATE Vietnamese_100_CI_AS    NOT NULL,
+        MatKhauHash     NVARCHAR(256) COLLATE Latin1_General_100_BIN2 NOT NULL,
+        VaiTro          NVARCHAR(30)  COLLATE Latin1_General_100_BIN2 NOT NULL,
         GiangVienId     INT                                           NULL,
         TrangThai       INT                                           NOT NULL CONSTRAINT DF_TaiKhoan_TrangThai DEFAULT (1),
         LanDangNhapCuoi DATETIME2(0)                                  NULL,
@@ -101,12 +108,12 @@ BEGIN
     CREATE TABLE dbo.HocVien
     (
         Id          INT                                           IDENTITY(1,1) NOT NULL,
-        MaHocVien   NVARCHAR(20)  COLLATE Vietnamese_100_CI_AI    NOT NULL,
+        MaHocVien   NVARCHAR(20)  COLLATE Vietnamese_100_CI_AS    NOT NULL,
         HoTen       NVARCHAR(100) COLLATE Vietnamese_100_CI_AI    NOT NULL,
         NgaySinh    DATE                                          NULL,
         GioiTinh    NVARCHAR(20)  COLLATE Vietnamese_100_CI_AI    NULL,
-        DienThoai   NVARCHAR(20)  COLLATE Vietnamese_100_CI_AI    NULL,
-        Email       NVARCHAR(150) COLLATE Vietnamese_100_CI_AI    NULL,
+        DienThoai   NVARCHAR(20)  COLLATE Vietnamese_100_CI_AS    NULL,
+        Email       NVARCHAR(150) COLLATE Vietnamese_100_CI_AS    NULL,
         DiaChi      NVARCHAR(250) COLLATE Vietnamese_100_CI_AI    NULL,
         NgayDangKy  DATE                                          NOT NULL CONSTRAINT DF_HocVien_NgayDangKy DEFAULT (CAST(GETDATE() AS DATE)),
         TrangThai   INT                                           NOT NULL CONSTRAINT DF_HocVien_TrangThai DEFAULT (1),
@@ -144,7 +151,7 @@ BEGIN
     CREATE TABLE dbo.MonHoc
     (
         Id            INT                                           IDENTITY(1,1) NOT NULL,
-        MaMonHoc      NVARCHAR(20)  COLLATE Vietnamese_100_CI_AI    NOT NULL,
+        MaMonHoc      NVARCHAR(20)  COLLATE Vietnamese_100_CI_AS    NOT NULL,
         TenMonHoc     NVARCHAR(150) COLLATE Vietnamese_100_CI_AI    NOT NULL,
         SoBuoiMacDinh INT                                           NOT NULL,
         MoTa          NVARCHAR(500) COLLATE Vietnamese_100_CI_AI    NULL,
@@ -178,7 +185,7 @@ BEGIN
     CREATE TABLE dbo.KhoaHoc
     (
         Id            INT                                           IDENTITY(1,1) NOT NULL,
-        MaKhoaHoc     NVARCHAR(20)  COLLATE Vietnamese_100_CI_AI    NOT NULL,
+        MaKhoaHoc     NVARCHAR(20)  COLLATE Vietnamese_100_CI_AS    NOT NULL,
         TenKhoaHoc    NVARCHAR(150) COLLATE Vietnamese_100_CI_AI    NOT NULL,
         HocPhiNiemYet DECIMAL(18, 2)                                NOT NULL CONSTRAINT DF_KhoaHoc_HocPhiNiemYet DEFAULT (0),
         MoTa          NVARCHAR(500) COLLATE Vietnamese_100_CI_AI    NULL,
@@ -245,7 +252,7 @@ BEGIN
     CREATE TABLE dbo.PhongHoc
     (
         Id        INT                                           IDENTITY(1,1) NOT NULL,
-        MaPhong   NVARCHAR(20)  COLLATE Vietnamese_100_CI_AI    NOT NULL,
+        MaPhong   NVARCHAR(20)  COLLATE Vietnamese_100_CI_AS    NOT NULL,
         TenPhong  NVARCHAR(100) COLLATE Vietnamese_100_CI_AI    NOT NULL,
         SucChua   INT                                           NOT NULL,
         TrangThai INT                                           NOT NULL CONSTRAINT DF_PhongHoc_TrangThai DEFAULT (1),

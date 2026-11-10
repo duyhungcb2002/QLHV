@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using QLHV.Contracts.Constants;
 using QLHV.Contracts.Dtos;
 using QLHV.Contracts.Enums;
 using QLHV.Contracts.Results;
@@ -297,6 +298,230 @@ public class CatalogValidationAndCrudTests
 
         Assert.IsFalse(res.IsSuccess);
         Assert.AreEqual(ErrorCodes.INVALID_RANGE, res.Error?.Code);
+    }
+
+    #endregion
+
+    #region Catalog Field Limits Exceeded Tests
+
+    [TestMethod]
+    public async Task HocVien_Validation_ExceededFieldLimits_Fails()
+    {
+        // MaHocVien > 20 chars
+        var res1 = await _hocVienService.CreateAsync(new HocVienDto
+        {
+            MaHocVien = new string('A', CatalogFieldLimits.MaHocVien + 1),
+            HoTen = "Học viên Test"
+        });
+        Assert.IsFalse(res1.IsSuccess);
+        Assert.AreEqual(ErrorCodes.INVALID_RANGE, res1.Error?.Code);
+
+        // HoTen > 100 chars
+        var res2 = await _hocVienService.CreateAsync(new HocVienDto
+        {
+            MaHocVien = "HV_TEST",
+            HoTen = new string('B', CatalogFieldLimits.HoTen + 1)
+        });
+        Assert.IsFalse(res2.IsSuccess);
+        Assert.AreEqual(ErrorCodes.INVALID_RANGE, res2.Error?.Code);
+
+        // GioiTinh > 20 chars
+        var res3 = await _hocVienService.CreateAsync(new HocVienDto
+        {
+            MaHocVien = "HV_TEST",
+            HoTen = "Học viên Test",
+            GioiTinh = new string('C', CatalogFieldLimits.GioiTinh + 1)
+        });
+        Assert.IsFalse(res3.IsSuccess);
+        Assert.AreEqual(ErrorCodes.INVALID_RANGE, res3.Error?.Code);
+
+        // DienThoai > 20 chars
+        var res4 = await _hocVienService.CreateAsync(new HocVienDto
+        {
+            MaHocVien = "HV_TEST",
+            HoTen = "Học viên Test",
+            DienThoai = new string('1', CatalogFieldLimits.DienThoai + 1)
+        });
+        Assert.IsFalse(res4.IsSuccess);
+        Assert.AreEqual(ErrorCodes.INVALID_RANGE, res4.Error?.Code);
+
+        // Email > 150 chars
+        var longEmail = new string('a', 140) + "@example.com"; // > 150 chars
+        var res5 = await _hocVienService.CreateAsync(new HocVienDto
+        {
+            MaHocVien = "HV_TEST",
+            HoTen = "Học viên Test",
+            Email = longEmail
+        });
+        Assert.IsFalse(res5.IsSuccess);
+        Assert.AreEqual(ErrorCodes.INVALID_RANGE, res5.Error?.Code);
+
+        // DiaChi > 250 chars
+        var res6 = await _hocVienService.CreateAsync(new HocVienDto
+        {
+            MaHocVien = "HV_TEST",
+            HoTen = "Học viên Test",
+            DiaChi = new string('D', CatalogFieldLimits.DiaChi + 1)
+        });
+        Assert.IsFalse(res6.IsSuccess);
+        Assert.AreEqual(ErrorCodes.INVALID_RANGE, res6.Error?.Code);
+
+        // Update with HoTen > 100 chars
+        var res7 = await _hocVienService.UpdateAsync(new HocVienDto
+        {
+            Id = 1,
+            MaHocVien = "HV001",
+            HoTen = new string('U', CatalogFieldLimits.HoTen + 1)
+        });
+        Assert.IsFalse(res7.IsSuccess);
+        Assert.AreEqual(ErrorCodes.INVALID_RANGE, res7.Error?.Code);
+    }
+
+    [TestMethod]
+    public async Task GiangVien_Validation_ExceededFieldLimits_Fails()
+    {
+        // MaGiangVien > 20 chars
+        var res1 = await _giangVienService.CreateAsync(new GiangVienDto
+        {
+            MaGiangVien = new string('G', CatalogFieldLimits.MaGiangVien + 1),
+            HoTen = "Giảng viên Test"
+        });
+        Assert.IsFalse(res1.IsSuccess);
+        Assert.AreEqual(ErrorCodes.INVALID_RANGE, res1.Error?.Code);
+
+        // HoTen > 100 chars
+        var res2 = await _giangVienService.CreateAsync(new GiangVienDto
+        {
+            MaGiangVien = "GV_TEST",
+            HoTen = new string('H', CatalogFieldLimits.HoTen + 1)
+        });
+        Assert.IsFalse(res2.IsSuccess);
+        Assert.AreEqual(ErrorCodes.INVALID_RANGE, res2.Error?.Code);
+
+        // ChuyenMon > 200 chars
+        var res3 = await _giangVienService.CreateAsync(new GiangVienDto
+        {
+            MaGiangVien = "GV_TEST",
+            HoTen = "Giảng viên Test",
+            ChuyenMon = new string('C', CatalogFieldLimits.ChuyenMon + 1)
+        });
+        Assert.IsFalse(res3.IsSuccess);
+        Assert.AreEqual(ErrorCodes.INVALID_RANGE, res3.Error?.Code);
+
+        // Update with MaGiangVien > 20 chars
+        var res4 = await _giangVienService.UpdateAsync(new GiangVienDto
+        {
+            Id = 1,
+            MaGiangVien = new string('G', CatalogFieldLimits.MaGiangVien + 1),
+            HoTen = "Giảng viên Test"
+        });
+        Assert.IsFalse(res4.IsSuccess);
+        Assert.AreEqual(ErrorCodes.INVALID_RANGE, res4.Error?.Code);
+    }
+
+    [TestMethod]
+    public async Task MonHoc_Validation_ExceededFieldLimits_Fails()
+    {
+        // MaMonHoc > 20 chars
+        var res1 = await _monHocService.CreateAsync(new MonHocDto
+        {
+            MaMonHoc = new string('M', CatalogFieldLimits.MaMonHoc + 1),
+            TenMonHoc = "Môn học Test",
+            SoBuoiMacDinh = 10
+        });
+        Assert.IsFalse(res1.IsSuccess);
+        Assert.AreEqual(ErrorCodes.INVALID_RANGE, res1.Error?.Code);
+
+        // TenMonHoc > 150 chars
+        var res2 = await _monHocService.CreateAsync(new MonHocDto
+        {
+            MaMonHoc = "MH_TEST",
+            TenMonHoc = new string('T', CatalogFieldLimits.TenMonHoc + 1),
+            SoBuoiMacDinh = 10
+        });
+        Assert.IsFalse(res2.IsSuccess);
+        Assert.AreEqual(ErrorCodes.INVALID_RANGE, res2.Error?.Code);
+
+        // MoTa > 500 chars
+        var res3 = await _monHocService.CreateAsync(new MonHocDto
+        {
+            MaMonHoc = "MH_TEST",
+            TenMonHoc = "Môn học Test",
+            MoTa = new string('D', CatalogFieldLimits.MoTa + 1),
+            SoBuoiMacDinh = 10
+        });
+        Assert.IsFalse(res3.IsSuccess);
+        Assert.AreEqual(ErrorCodes.INVALID_RANGE, res3.Error?.Code);
+    }
+
+    [TestMethod]
+    public async Task KhoaHoc_Validation_ExceededFieldLimits_Fails()
+    {
+        // MaKhoaHoc > 20 chars
+        var res1 = await _khoaHocService.CreateAsync(new KhoaHocDto
+        {
+            MaKhoaHoc = new string('K', CatalogFieldLimits.MaKhoaHoc + 1),
+            TenKhoaHoc = "Khóa học Test",
+            HocPhiNiemYet = 1000000
+        });
+        Assert.IsFalse(res1.IsSuccess);
+        Assert.AreEqual(ErrorCodes.INVALID_RANGE, res1.Error?.Code);
+
+        // TenKhoaHoc > 150 chars
+        var res2 = await _khoaHocService.CreateAsync(new KhoaHocDto
+        {
+            MaKhoaHoc = "KH_TEST",
+            TenKhoaHoc = new string('T', CatalogFieldLimits.TenKhoaHoc + 1),
+            HocPhiNiemYet = 1000000
+        });
+        Assert.IsFalse(res2.IsSuccess);
+        Assert.AreEqual(ErrorCodes.INVALID_RANGE, res2.Error?.Code);
+
+        // MoTa > 500 chars
+        var res3 = await _khoaHocService.CreateAsync(new KhoaHocDto
+        {
+            MaKhoaHoc = "KH_TEST",
+            TenKhoaHoc = "Khóa học Test",
+            MoTa = new string('D', CatalogFieldLimits.MoTa + 1),
+            HocPhiNiemYet = 1000000
+        });
+        Assert.IsFalse(res3.IsSuccess);
+        Assert.AreEqual(ErrorCodes.INVALID_RANGE, res3.Error?.Code);
+    }
+
+    [TestMethod]
+    public async Task PhongHoc_Validation_ExceededFieldLimits_Fails()
+    {
+        // MaPhong > 20 chars
+        var res1 = await _phongHocService.CreateAsync(new PhongHocDto
+        {
+            MaPhong = new string('P', CatalogFieldLimits.MaPhong + 1),
+            TenPhong = "Phòng Test",
+            SucChua = 30
+        });
+        Assert.IsFalse(res1.IsSuccess);
+        Assert.AreEqual(ErrorCodes.INVALID_RANGE, res1.Error?.Code);
+
+        // TenPhong > 100 chars
+        var res2 = await _phongHocService.CreateAsync(new PhongHocDto
+        {
+            MaPhong = "PH_TEST",
+            TenPhong = new string('T', CatalogFieldLimits.TenPhong + 1),
+            SucChua = 30
+        });
+        Assert.IsFalse(res2.IsSuccess);
+        Assert.AreEqual(ErrorCodes.INVALID_RANGE, res2.Error?.Code);
+
+        // Update with TenPhong > 100 chars
+        var res3 = await _phongHocService.UpdateAsync(new PhongHocDto
+        {
+            Id = 1,
+            MaPhong = "P101",
+            TenPhong = new string('T', CatalogFieldLimits.TenPhong + 1),
+            SucChua = 30
+        });
+        Assert.IsFalse(res3.IsSuccess);
+        Assert.AreEqual(ErrorCodes.INVALID_RANGE, res3.Error?.Code);
     }
 
     #endregion

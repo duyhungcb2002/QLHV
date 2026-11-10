@@ -1,3 +1,4 @@
+using QLHV.Contracts.Constants;
 using QLHV.Contracts.Dtos;
 using QLHV.Contracts.Enums;
 using QLHV.Contracts.Results;
@@ -180,9 +181,19 @@ public class PhongHocService : IPhongHocService
             return OperationResult.Failed(ErrorCodes.REQUIRED, "Mã phòng học là bắt buộc.");
         }
 
+        if (dto.MaPhong.Trim().Length > CatalogFieldLimits.MaPhong)
+        {
+            return OperationResult.Failed(ErrorCodes.INVALID_RANGE, $"Mã phòng học không được vượt quá {CatalogFieldLimits.MaPhong} ký tự.");
+        }
+
         if (string.IsNullOrWhiteSpace(dto.TenPhong))
         {
             return OperationResult.Failed(ErrorCodes.REQUIRED, "Tên phòng học là bắt buộc.");
+        }
+
+        if (dto.TenPhong.Trim().Length > CatalogFieldLimits.TenPhong)
+        {
+            return OperationResult.Failed(ErrorCodes.INVALID_RANGE, $"Tên phòng học không được vượt quá {CatalogFieldLimits.TenPhong} ký tự.");
         }
 
         if (dto.SucChua <= 0)

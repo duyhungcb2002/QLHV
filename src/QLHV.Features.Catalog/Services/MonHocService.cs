@@ -1,3 +1,4 @@
+using QLHV.Contracts.Constants;
 using QLHV.Contracts.Dtos;
 using QLHV.Contracts.Enums;
 using QLHV.Contracts.Results;
@@ -182,9 +183,24 @@ public class MonHocService : IMonHocService
             return OperationResult.Failed(ErrorCodes.REQUIRED, "Mã môn học là bắt buộc.");
         }
 
+        if (dto.MaMonHoc.Trim().Length > CatalogFieldLimits.MaMonHoc)
+        {
+            return OperationResult.Failed(ErrorCodes.INVALID_RANGE, $"Mã môn học không được vượt quá {CatalogFieldLimits.MaMonHoc} ký tự.");
+        }
+
         if (string.IsNullOrWhiteSpace(dto.TenMonHoc))
         {
             return OperationResult.Failed(ErrorCodes.REQUIRED, "Tên môn học là bắt buộc.");
+        }
+
+        if (dto.TenMonHoc.Trim().Length > CatalogFieldLimits.TenMonHoc)
+        {
+            return OperationResult.Failed(ErrorCodes.INVALID_RANGE, $"Tên môn học không được vượt quá {CatalogFieldLimits.TenMonHoc} ký tự.");
+        }
+
+        if (!string.IsNullOrWhiteSpace(dto.MoTa) && dto.MoTa.Trim().Length > CatalogFieldLimits.MoTa)
+        {
+            return OperationResult.Failed(ErrorCodes.INVALID_RANGE, $"Mô tả môn học không được vượt quá {CatalogFieldLimits.MoTa} ký tự.");
         }
 
         if (dto.SoBuoiMacDinh <= 0)

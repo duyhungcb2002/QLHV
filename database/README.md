@@ -32,8 +32,8 @@ GO
 
 Luôn chạy các script theo đúng thứ tự sau trên database `QLHV`:
 
-1. **`001_schema.sql`** — Khởi tạo 7 bảng phục vụ Đăng nhập và 6 Danh mục hiện có (`GiangVien`, `TaiKhoan`, `HocVien`, `MonHoc`, `KhoaHoc`, `KhoaHocMonHoc`, `PhongHoc`), kèm theo khóa chính, khóa ngoại, unique constraint, check constraint và index.
-2. **`002_seed.sql`** — Nạp dữ liệu mẫu idempotent cho 6 danh mục và 5 tài khoản tương ứng với 5 vai trò hệ thống (`ADMIN`, `DAOTAO`, `THUNGAN`, `GIANGVIEN`, `QUANLY`). Mật khẩu được lưu dưới dạng băm PBKDF2-SHA256 tương thích với `Pbkdf2PasswordHasher`.
+1. **`001_schema.sql`** — Khởi tạo 7 bảng phục vụ Đăng nhập và 6 Danh mục hiện có (`GiangVien`, `TaiKhoan`, `HocVien`, `MonHoc`, `KhoaHoc`, `KhoaHocMonHoc`, `PhongHoc`), kèm theo khóa chính, khóa ngoại, unique constraint, check constraint và index. Lưu ý: Đây là script khởi tạo database mới, không phải migration. Nếu database hoặc bảng đã tồn tại từ schema cũ thì việc chạy lại script không tự động đổi collation. Không tạo migration trong lượt này.
+2. **`002_seed.sql`** — Nạp dữ liệu mẫu idempotent cho 6 danh mục và 6 tài khoản demo: 5 vai trò hoạt động và 1 tài khoản bị khóa (`ADMIN`, `DAOTAO`, `THUNGAN`, `GIANGVIEN`, `QUANLY`, `bikhoa`). Mật khẩu được lưu dưới dạng băm PBKDF2-SHA256 tương thích với `Pbkdf2PasswordHasher`.
 
 Ví dụ chạy bằng `sqlcmd` với Windows Authentication:
 
@@ -73,7 +73,7 @@ SELECT N'KhoaHocMonHoc', COUNT(*) FROM dbo.KhoaHocMonHoc
 UNION ALL
 SELECT N'PhongHoc', COUNT(*) FROM dbo.PhongHoc;
 
--- 3. Kiểm tra danh sách 5 tài khoản theo vai trò
+-- 3. Kiểm tra danh sách 6 tài khoản theo vai trò
 SELECT Id, TenDangNhap, VaiTro, GiangVienId, TrangThai
 FROM dbo.TaiKhoan
 ORDER BY Id;

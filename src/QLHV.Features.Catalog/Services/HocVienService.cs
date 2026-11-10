@@ -1,3 +1,4 @@
+using QLHV.Contracts.Constants;
 using QLHV.Contracts.Dtos;
 using QLHV.Contracts.Enums;
 using QLHV.Contracts.Results;
@@ -189,9 +190,39 @@ public class HocVienService : IHocVienService
             return OperationResult.Failed(ErrorCodes.REQUIRED, "Mã học viên là bắt buộc.");
         }
 
+        if (dto.MaHocVien.Trim().Length > CatalogFieldLimits.MaHocVien)
+        {
+            return OperationResult.Failed(ErrorCodes.INVALID_RANGE, $"Mã học viên không được vượt quá {CatalogFieldLimits.MaHocVien} ký tự.");
+        }
+
         if (string.IsNullOrWhiteSpace(dto.HoTen))
         {
             return OperationResult.Failed(ErrorCodes.REQUIRED, "Họ và tên học viên là bắt buộc.");
+        }
+
+        if (dto.HoTen.Trim().Length > CatalogFieldLimits.HoTen)
+        {
+            return OperationResult.Failed(ErrorCodes.INVALID_RANGE, $"Họ và tên học viên không được vượt quá {CatalogFieldLimits.HoTen} ký tự.");
+        }
+
+        if (!string.IsNullOrWhiteSpace(dto.GioiTinh) && dto.GioiTinh.Trim().Length > CatalogFieldLimits.GioiTinh)
+        {
+            return OperationResult.Failed(ErrorCodes.INVALID_RANGE, $"Giới tính không được vượt quá {CatalogFieldLimits.GioiTinh} ký tự.");
+        }
+
+        if (!string.IsNullOrWhiteSpace(dto.DienThoai) && dto.DienThoai.Trim().Length > CatalogFieldLimits.DienThoai)
+        {
+            return OperationResult.Failed(ErrorCodes.INVALID_RANGE, $"Số điện thoại không được vượt quá {CatalogFieldLimits.DienThoai} ký tự.");
+        }
+
+        if (!string.IsNullOrWhiteSpace(dto.Email) && dto.Email.Trim().Length > CatalogFieldLimits.Email)
+        {
+            return OperationResult.Failed(ErrorCodes.INVALID_RANGE, $"Địa chỉ email không được vượt quá {CatalogFieldLimits.Email} ký tự.");
+        }
+
+        if (!string.IsNullOrWhiteSpace(dto.DiaChi) && dto.DiaChi.Trim().Length > CatalogFieldLimits.DiaChi)
+        {
+            return OperationResult.Failed(ErrorCodes.INVALID_RANGE, $"Địa chỉ không được vượt quá {CatalogFieldLimits.DiaChi} ký tự.");
         }
 
         // Kiểm tra trùng mã học viên (không phân biệt hoa thường)

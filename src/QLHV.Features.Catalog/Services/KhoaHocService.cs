@@ -1,3 +1,4 @@
+using QLHV.Contracts.Constants;
 using QLHV.Contracts.Dtos;
 using QLHV.Contracts.Enums;
 using QLHV.Contracts.Results;
@@ -182,9 +183,24 @@ public class KhoaHocService : IKhoaHocService
             return OperationResult.Failed(ErrorCodes.REQUIRED, "Mã khóa học là bắt buộc.");
         }
 
+        if (dto.MaKhoaHoc.Trim().Length > CatalogFieldLimits.MaKhoaHoc)
+        {
+            return OperationResult.Failed(ErrorCodes.INVALID_RANGE, $"Mã khóa học không được vượt quá {CatalogFieldLimits.MaKhoaHoc} ký tự.");
+        }
+
         if (string.IsNullOrWhiteSpace(dto.TenKhoaHoc))
         {
             return OperationResult.Failed(ErrorCodes.REQUIRED, "Tên khóa học là bắt buộc.");
+        }
+
+        if (dto.TenKhoaHoc.Trim().Length > CatalogFieldLimits.TenKhoaHoc)
+        {
+            return OperationResult.Failed(ErrorCodes.INVALID_RANGE, $"Tên khóa học không được vượt quá {CatalogFieldLimits.TenKhoaHoc} ký tự.");
+        }
+
+        if (!string.IsNullOrWhiteSpace(dto.MoTa) && dto.MoTa.Trim().Length > CatalogFieldLimits.MoTa)
+        {
+            return OperationResult.Failed(ErrorCodes.INVALID_RANGE, $"Mô tả khóa học không được vượt quá {CatalogFieldLimits.MoTa} ký tự.");
         }
 
         if (dto.HocPhiNiemYet < 0)
