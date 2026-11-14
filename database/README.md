@@ -1,8 +1,10 @@
 # Hướng Dẫn Cơ Sở Dữ Liệu SQL Server (QLHV)
 
 > **Trạng thái kiểm chứng hiện tại:**
-> Các script trong thư mục này (`001_schema.sql` và `002_seed.sql`) thuộc giai đoạn **SQL-01A**, đã được rà soát tĩnh (static review) đối chiếu với DTO và Repository Interface hiện có.
-> Máy phát triển hiện tại **chưa cài đặt SQL Server / LocalDB / `sqlcmd`**, do đó các script **chưa được kiểm chứng runtime trên SQL Server thực tế**.
+> Toàn bộ script trong thư mục này (`001_schema.sql` và `002_seed.sql`) đã được thực thi và kiểm chứng runtime thành công trên Microsoft SQL Server Express (`.\SQLEXPRESS`).
+> - Database chính của ứng dụng: **`QLHV`** (phục vụ người dùng và ứng dụng WinForms).
+> - Database kiểm thử tích hợp: **`QLHV_Test`** (phục vụ bộ test tự động `SqlServerIntegrationTests`).
+> - Ứng dụng WinForms tuyệt đối không kết nối vào database kiểm thử `QLHV_Test`.
 
 ---
 
@@ -38,8 +40,8 @@ Luôn chạy các script theo đúng thứ tự sau trên database `QLHV`:
 Ví dụ chạy bằng `sqlcmd` với Windows Authentication:
 
 ```powershell
-sqlcmd -S localhost -d QLHV -E -i database\001_schema.sql -b
-sqlcmd -S localhost -d QLHV -E -i database\002_seed.sql -b
+sqlcmd -S .\SQLEXPRESS -d QLHV -E -i database\001_schema.sql -b
+sqlcmd -S .\SQLEXPRESS -d QLHV -E -i database\002_seed.sql -b
 ```
 
 ---
@@ -85,13 +87,13 @@ ORDER BY Id;
 
 Ưu tiên sử dụng **Windows Authentication** (`Trusted_Connection=True` hoặc `Integrated Security=True`) để không phải lưu trữ tài khoản và mật khẩu SQL Server trong file cấu hình:
 
+- Với SQL Server Express (khuyến nghị trên máy phát triển):
+  ```text
+  Server=.\SQLEXPRESS;Database=QLHV;Trusted_Connection=True;TrustServerCertificate=True
+  ```
 - Với SQL Server mặc định trên máy cục bộ:
   ```text
-  Server=localhost;Database=QLHV;Trusted_Connection=True;TrustServerCertificate=True
-  ```
-- Với SQL Server Express:
-  ```text
-  Server=localhost\SQLEXPRESS;Database=QLHV;Trusted_Connection=True;TrustServerCertificate=True
+  Server=.;Database=QLHV;Trusted_Connection=True;TrustServerCertificate=True
   ```
 - Với SQL Server LocalDB:
   ```text
@@ -100,9 +102,12 @@ ORDER BY Id;
 
 ---
 
-## 6. Cách chuẩn bị Database Test riêng
+## 6. Phân biệt Database ứng dụng và Database kiểm thử tích hợp
 
-Khi thực hiện kiểm thử tích hợp (Integration Test ở giai đoạn sau), luôn tách biệt database kiểm thử khỏi database demo:
+Hệ thống phân định rạch ròi giữa database chạy ứng dụng chính và database kiểm thử tích hợp:
+
+- **`QLHV`**: Database chạy ứng dụng Windows Forms và phục vụ người dùng.
+- **`QLHV_Test`**: Database chạy bộ kiểm thử tích hợp tự động (`SqlServerIntegrationTests`).
 
 ```sql
 IF DB_ID(N'QLHV_Test') IS NULL
@@ -115,15 +120,15 @@ GO
 Sau đó chạy `001_schema.sql` và `002_seed.sql` vào `QLHV_Test`:
 
 ```powershell
-sqlcmd -S localhost -d QLHV_Test -E -i database\001_schema.sql -b
-sqlcmd -S localhost -d QLHV_Test -E -i database\002_seed.sql -b
+sqlcmd -S .\SQLEXPRESS -d QLHV_Test -E -i database\001_schema.sql -b
+sqlcmd -S .\SQLEXPRESS -d QLHV_Test -E -i database\002_seed.sql -b
 ```
 
 ---
 
 ## 7. Quy tắc an toàn và cảnh báo bắt buộc
 
-- **Cảnh báo môi trường:** Schema và dữ liệu mẫu trong thư mục này mới chỉ hoàn thành bước **static review** (rà soát cú pháp và đối chiếu DTO), **chưa được chạy trên SQL Server thật** do máy phát triển chưa cài đặt SQL Server / LocalDB.
+- **Phân tách môi trường kiểm thử:** Bộ test tự động chỉ thao tác trên `QLHV_Test`. Ứng dụng WinForms tuyệt đối không kết nối vào `QLHV_Test`.
 - **Cảnh báo dữ liệu mẫu (Seed):** File `002_seed.sql` **chỉ dành riêng cho mục đích demo và kiểm thử nội bộ**. Tuyệt đối không chạy script dữ liệu mẫu này lên database sản xuất (production). Khi đưa vào triển khai thật, bắt buộc phải xóa bỏ hoặc thay đổi mật khẩu toàn bộ các tài khoản demo (`admin`, `daotao`, `thungan`, `giangvien`, `quanly`, `bikhoa`).
 - **Cấu hình chứng chỉ kết nối:** Thuộc tính `TrustServerCertificate=True` trong chuỗi kết nối mẫu chỉ dành riêng cho môi trường phát triển / LocalDB cục bộ, tuyệt đối không áp dụng trên môi trường production nếu không có chứng chỉ TLS/SSL hợp lệ.
 - **Bảo mật chuỗi kết nối:** Tuyệt đối không đưa chuỗi kết nối thật (connection string chứa server nội bộ, mật khẩu SQL Server thật) lên Git. Sử dụng file `appsettings.Local.json` (đã được cấu hình trong `.gitignore`) cho các thiết lập cục bộ.

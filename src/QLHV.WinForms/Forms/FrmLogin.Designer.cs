@@ -158,7 +158,7 @@ partial class FrmLogin
         lblDemoHint.Name = "lblDemoHint";
         lblDemoHint.Size = new Size(236, 13);
         lblDemoHint.TabIndex = 8;
-        lblDemoHint.Text = "Tài khoản demo: admin / Admin@123 (Xem README)";
+        lblDemoHint.Text = "Tài khoản mẫu: admin / Admin@123 (Xem README)";
         // 
         // FrmLogin
         // 

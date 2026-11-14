@@ -1,9 +1,22 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <ProjectReference Include="..\QLHV.Contracts\QLHV.Contracts.csproj" />
     <ProjectReference Include="..\QLHV.Core\QLHV.Core.csproj" />
     <ProjectReference Include="..\QLHV.Features.Catalog\QLHV.Features.Catalog.csproj" />
+    <ProjectReference Include="..\QLHV.Infrastructure.SqlServer\QLHV.Infrastructure.SqlServer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.sample.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.Local.json" Condition="Exists('appsettings.Local.json')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <PropertyGroup>

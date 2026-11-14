@@ -28,7 +28,8 @@ public partial class FrmMain : Form
         IMonHocService monHocService,
         IKhoaHocService khoaHocService,
         IKhoaHocMonHocService khoaHocMonHocService,
-        IPhongHocService phongHocService)
+        IPhongHocService phongHocService,
+        string environmentName)
     {
         InitializeComponent();
         _currentUserService = currentUserService;
@@ -42,6 +43,7 @@ public partial class FrmMain : Form
 
         SetupUserInfo();
         ConfigureMenuPermissions();
+        UpdateEnvironmentBadge(environmentName);
 
         // Mở màn hình danh mục học viên mặc định nếu có quyền
         Load += (_, _) =>
@@ -60,6 +62,21 @@ public partial class FrmMain : Form
         {
             lblUsername.Text = $"👤 {user.TenDangNhap}";
             lblRole.Text = $"Vai trò: {user.VaiTro}";
+        }
+    }
+
+    private void UpdateEnvironmentBadge(string environmentName)
+    {
+        lblEnvBadge.Text = $"Môi trường: {environmentName}";
+        if (environmentName.Contains("SQL", StringComparison.OrdinalIgnoreCase))
+        {
+            lblEnvBadge.BackColor = Color.FromArgb(220, 252, 231);
+            lblEnvBadge.ForeColor = Color.FromArgb(22, 101, 52);
+        }
+        else
+        {
+            lblEnvBadge.BackColor = Color.FromArgb(254, 243, 199);
+            lblEnvBadge.ForeColor = Color.FromArgb(180, 83, 9);
         }
     }
 

@@ -74,6 +74,10 @@ public class UiSmokeTests
         Assert.AreEqual("Đăng nhập hệ thống QLHV", form.Text);
         Assert.IsNotNull(form.AcceptButton);
         Assert.IsNotNull(form.CancelButton);
+
+        var hintControls = form.Controls.Find("lblDemoHint", true);
+        Assert.HasCount(1, hintControls);
+        StringAssert.Contains(hintControls[0].Text, "Tài khoản mẫu:");
     }
 
     [TestMethod]
@@ -94,10 +98,42 @@ public class UiSmokeTests
             _monHocService,
             _khoaHocService,
             _khoaHocMonHocService,
-            _phongHocService);
+            _phongHocService,
+            "SQL Server");
 
         Assert.IsNotNull(form);
         Assert.IsFalse(string.IsNullOrEmpty(form.Text));
+
+        var badgeControls = form.Controls.Find("lblEnvBadge", true);
+        Assert.HasCount(1, badgeControls);
+        Assert.AreEqual("Môi trường: SQL Server", badgeControls[0].Text);
+    }
+
+    [TestMethod]
+    public void Main_Form_Shows_Fake_Data_Environment_Badge()
+    {
+        _currentUserService.SetCurrentUser(new TaiKhoanDto
+        {
+            Id = 1,
+            TenDangNhap = "admin",
+            VaiTro = VaiTro.ADMIN
+        });
+
+        using var form = new FrmMain(
+            _currentUserService,
+            _authService,
+            _hocVienService,
+            _giangVienService,
+            _monHocService,
+            _khoaHocService,
+            _khoaHocMonHocService,
+            _phongHocService,
+            "Fake Data");
+
+        Assert.IsNotNull(form);
+        var badgeControls = form.Controls.Find("lblEnvBadge", true);
+        Assert.HasCount(1, badgeControls);
+        Assert.AreEqual("Môi trường: Fake Data", badgeControls[0].Text);
     }
 
     [TestMethod]
