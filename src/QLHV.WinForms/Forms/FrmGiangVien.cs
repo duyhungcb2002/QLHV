@@ -2,6 +2,7 @@ using QLHV.Contracts.Dtos;
 using QLHV.Contracts.Enums;
 using QLHV.Core.Security;
 using QLHV.Core.Services;
+using QLHV.WinForms.Configuration;
 
 namespace QLHV.WinForms.Forms;
 
@@ -30,6 +31,7 @@ public partial class FrmGiangVien : Form
 
     private void ConfigureGrid()
     {
+        dgvGiangVien.ApplyStandardGridStyle();
         dgvGiangVien.AutoGenerateColumns = false;
         dgvGiangVien.CellFormatting += (s, e) =>
         {

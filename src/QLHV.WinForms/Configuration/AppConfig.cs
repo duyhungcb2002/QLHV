@@ -14,4 +14,3 @@ public sealed class AppConfig
     /// </summary>
     public string DisplayEnvironment => DataProvider == DataProviderMode.SqlServer ? "SQL Server" : "Fake Data";
 }
-

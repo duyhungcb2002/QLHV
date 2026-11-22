@@ -4,6 +4,7 @@ namespace QLHV.Core.Repositories;
 
 public interface ITaiKhoanRepository
 {
+    Task<TaiKhoanDto?> GetByIdAsync(int id);
     Task<TaiKhoanDto?> GetByTenDangNhapAsync(string tenDangNhap);
     Task<string?> GetPasswordHashAsync(string tenDangNhap);
     Task<bool> UpdateLanDangNhapCuoiAsync(int id, DateTime thoiGian);

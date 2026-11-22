@@ -11,6 +11,10 @@ public static class ErrorCodes
     public const string NOT_FOUND = "NOT_FOUND";
     public const string FORBIDDEN = "FORBIDDEN";
     public const string INVALID_RANGE = "INVALID_RANGE";
+    public const string VALIDATION_ERROR = "VALIDATION_ERROR";
+    public const string BUSINESS_RULE_VIOLATION = "BUSINESS_RULE_VIOLATION";
+    public const string UNAUTHORIZED = "UNAUTHORIZED";
+    public const string ALREADY_EXISTS = "ALREADY_EXISTS";
     public const string INVALID_CREDENTIALS = "INVALID_CREDENTIALS";
     public const string ACCOUNT_LOCKED = "ACCOUNT_LOCKED";
     public const string UNEXPECTED_ERROR = "UNEXPECTED_ERROR";

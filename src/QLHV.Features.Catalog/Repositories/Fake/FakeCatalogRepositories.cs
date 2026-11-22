@@ -1,3 +1,4 @@
+using QLHV.Contracts.Constants;
 using QLHV.Contracts.Dtos;
 using QLHV.Contracts.Enums;
 using QLHV.Core.Repositories;
@@ -31,7 +32,14 @@ public class FakeHocVienRepository : IHocVienRepository
             Email = "an.nguyen@example.com",
             DiaChi = "Hà Nội",
             NgayDangKy = DateTime.Today.AddMonths(-3),
-            TrangThai = TrangThaiHoatDong.DangHoatDong
+            TrangThai = TrangThaiHoatDong.DangHoatDong,
+            SoDinhDanh = "001203001234",
+            NgayCapGiayTo = new DateTime(2021, 5, 12),
+            NoiCapGiayTo = "Cục Cảnh sát QLHC về TTXH",
+            NguonTuyenSinh = "Facebook",
+            NgheNghiep = "Sinh viên",
+            DonViCongTac = "Đại học Bách Khoa",
+            GhiChuDacBiet = "Đăng ký khóa học lập trình Web"
         });
 
         AddInternal(new HocVienDto
@@ -44,7 +52,14 @@ public class FakeHocVienRepository : IHocVienRepository
             Email = "binh.tran@example.com",
             DiaChi = "Đà Nẵng",
             NgayDangKy = DateTime.Today.AddMonths(-2),
-            TrangThai = TrangThaiHoatDong.DangHoatDong
+            TrangThai = TrangThaiHoatDong.DangHoatDong,
+            SoDinhDanh = "048204005678",
+            NgayCapGiayTo = new DateTime(2022, 8, 20),
+            NoiCapGiayTo = "Cục Cảnh sát QLHC về TTXH",
+            NguonTuyenSinh = "Website",
+            NgheNghiep = "Sinh viên",
+            DonViCongTac = "Đại học Sư Phạm",
+            GhiChuDacBiet = null
         });
 
         AddInternal(new HocVienDto
@@ -57,7 +72,14 @@ public class FakeHocVienRepository : IHocVienRepository
             Email = "cuong.le@example.com",
             DiaChi = "TP. Hồ Chí Minh",
             NgayDangKy = DateTime.Today.AddMonths(-1),
-            TrangThai = TrangThaiHoatDong.DangHoatDong
+            TrangThai = TrangThaiHoatDong.DangHoatDong,
+            SoDinhDanh = "079202009876",
+            NgayCapGiayTo = new DateTime(2020, 11, 5),
+            NoiCapGiayTo = "Cục Cảnh sát QLHC về TTXH",
+            NguonTuyenSinh = NguonTuyenSinhDefaults.GioiThieu,
+            NgheNghiep = "Kỹ sư",
+            DonViCongTac = "Công ty FPT",
+            GhiChuDacBiet = "Ưu tiên lớp buổi tối"
         });
     }
 
@@ -83,12 +105,41 @@ public class FakeHocVienRepository : IHocVienRepository
                         ValidationHelper.ContainsSearch(h.MaHocVien, keyword) ||
                         ValidationHelper.ContainsSearch(h.HoTen, keyword) ||
                         ValidationHelper.ContainsSearch(h.DienThoai, keyword) ||
-                        ValidationHelper.ContainsSearch(h.Email, keyword));
+                        ValidationHelper.ContainsSearch(h.Email, keyword) ||
+                        ValidationHelper.ContainsSearch(h.SoDinhDanh, keyword) ||
+                        ValidationHelper.ContainsSearch(h.HoTenNguoiGiamHo, keyword) ||
+                        ValidationHelper.ContainsSearch(h.DienThoaiNguoiGiamHo, keyword) ||
+                        ValidationHelper.ContainsSearch(h.NguonTuyenSinh, keyword));
                 }
 
                 if (filter.TrangThai.HasValue)
                 {
                     query = query.Where(h => h.TrangThai == filter.TrangThai.Value);
+                }
+
+                if (!string.IsNullOrWhiteSpace(filter.SoDinhDanh))
+                {
+                    query = query.Where(h => string.Equals(h.SoDinhDanh?.Trim(), filter.SoDinhDanh.Trim(), StringComparison.OrdinalIgnoreCase));
+                }
+
+                if (!string.IsNullOrWhiteSpace(filter.NguoiGiamHo))
+                {
+                    query = query.Where(h => ValidationHelper.ContainsSearch(h.HoTenNguoiGiamHo, filter.NguoiGiamHo.Trim()));
+                }
+
+                if (!string.IsNullOrWhiteSpace(filter.DienThoaiNguoiGiamHo))
+                {
+                    query = query.Where(h => string.Equals(h.DienThoaiNguoiGiamHo?.Trim(), filter.DienThoaiNguoiGiamHo.Trim(), StringComparison.OrdinalIgnoreCase));
+                }
+
+                if (!string.IsNullOrWhiteSpace(filter.NguonTuyenSinh))
+                {
+                    query = query.Where(h => string.Equals(h.NguonTuyenSinh?.Trim(), filter.NguonTuyenSinh.Trim(), StringComparison.OrdinalIgnoreCase));
+                }
+
+                if (filter.NhanVienPhuTrachTaiKhoanId.HasValue)
+                {
+                    query = query.Where(h => h.NhanVienPhuTrachTaiKhoanId == filter.NhanVienPhuTrachTaiKhoanId.Value);
                 }
             }
 
@@ -111,6 +162,16 @@ public class FakeHocVienRepository : IHocVienRepository
         lock (_lock)
         {
             var item = _data.FirstOrDefault(x => string.Equals(x.MaHocVien, maHocVien?.Trim(), StringComparison.OrdinalIgnoreCase));
+            return Task.FromResult(item != null ? Clone(item) : null);
+        }
+    }
+
+    public Task<HocVienDto?> GetBySoDinhDanhAsync(string soDinhDanh)
+    {
+        lock (_lock)
+        {
+            if (string.IsNullOrWhiteSpace(soDinhDanh)) return Task.FromResult<HocVienDto?>(null);
+            var item = _data.FirstOrDefault(x => string.Equals(x.SoDinhDanh?.Trim(), soDinhDanh.Trim(), StringComparison.OrdinalIgnoreCase));
             return Task.FromResult(item != null ? Clone(item) : null);
         }
     }
@@ -143,6 +204,19 @@ public class FakeHocVienRepository : IHocVienRepository
             existing.NgayDangKy = dto.NgayDangKy;
             existing.TrangThai = dto.TrangThai;
 
+            existing.SoDinhDanh = dto.SoDinhDanh;
+            existing.NgayCapGiayTo = dto.NgayCapGiayTo;
+            existing.NoiCapGiayTo = dto.NoiCapGiayTo;
+            existing.HoTenNguoiGiamHo = dto.HoTenNguoiGiamHo;
+            existing.DienThoaiNguoiGiamHo = dto.DienThoaiNguoiGiamHo;
+            existing.QuanHeNguoiGiamHo = dto.QuanHeNguoiGiamHo;
+            existing.NhanVienPhuTrachTaiKhoanId = dto.NhanVienPhuTrachTaiKhoanId;
+            existing.TenNhanVienPhuTrach = dto.TenNhanVienPhuTrach;
+            existing.NguonTuyenSinh = dto.NguonTuyenSinh;
+            existing.NgheNghiep = dto.NgheNghiep;
+            existing.DonViCongTac = dto.DonViCongTac;
+            existing.GhiChuDacBiet = dto.GhiChuDacBiet;
+
             return Task.FromResult(true);
         }
     }
@@ -172,7 +246,20 @@ public class FakeHocVienRepository : IHocVienRepository
             Email = src.Email,
             DiaChi = src.DiaChi,
             NgayDangKy = src.NgayDangKy,
-            TrangThai = src.TrangThai
+            TrangThai = src.TrangThai,
+
+            SoDinhDanh = src.SoDinhDanh,
+            NgayCapGiayTo = src.NgayCapGiayTo,
+            NoiCapGiayTo = src.NoiCapGiayTo,
+            HoTenNguoiGiamHo = src.HoTenNguoiGiamHo,
+            DienThoaiNguoiGiamHo = src.DienThoaiNguoiGiamHo,
+            QuanHeNguoiGiamHo = src.QuanHeNguoiGiamHo,
+            NhanVienPhuTrachTaiKhoanId = src.NhanVienPhuTrachTaiKhoanId,
+            TenNhanVienPhuTrach = src.TenNhanVienPhuTrach,
+            NguonTuyenSinh = src.NguonTuyenSinh,
+            NgheNghiep = src.NgheNghiep,
+            DonViCongTac = src.DonViCongTac,
+            GhiChuDacBiet = src.GhiChuDacBiet
         };
     }
 }

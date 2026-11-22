@@ -1,6 +1,7 @@
 using QLHV.Core.Repositories;
 using QLHV.Core.Security;
 using QLHV.Features.Catalog.Repositories.Fake;
+using QLHV.Features.Training.Repositories.Fake;
 using QLHV.Infrastructure.SqlServer;
 using QLHV.Infrastructure.SqlServer.Repositories;
 
@@ -19,15 +20,30 @@ public static class RepositoryFactory
 
         if (config.DataProvider == DataProviderMode.Fake)
         {
+            var trainingStore = new FakeTrainingStore();
+            var hocVienRepo = new FakeHocVienRepository();
+            var giangVienRepo = new FakeGiangVienRepository();
+            var monHocRepo = new FakeMonHocRepository();
+            var phongHocRepo = new FakePhongHocRepository();
+            var khoaHocRepo = new FakeKhoaHocRepository();
+            var khoaHocMonHocRepo = new FakeKhoaHocMonHocRepository();
+
             return new RepositoryBundle
             {
                 TaiKhoanRepository = new FakeTaiKhoanRepository(passwordHasher),
-                HocVienRepository = new FakeHocVienRepository(),
-                GiangVienRepository = new FakeGiangVienRepository(),
-                MonHocRepository = new FakeMonHocRepository(),
-                KhoaHocRepository = new FakeKhoaHocRepository(),
-                KhoaHocMonHocRepository = new FakeKhoaHocMonHocRepository(),
-                PhongHocRepository = new FakePhongHocRepository()
+                HocVienRepository = hocVienRepo,
+                GiangVienRepository = giangVienRepo,
+                MonHocRepository = monHocRepo,
+                KhoaHocRepository = khoaHocRepo,
+                KhoaHocMonHocRepository = khoaHocMonHocRepo,
+                PhongHocRepository = phongHocRepo,
+
+                LopHocRepository = new FakeLopHocRepository(trainingStore, phongHocRepo),
+                DangKyLopHocRepository = new FakeDangKyLopHocRepository(trainingStore),
+                LichHocRepository = new FakeLichHocRepository(trainingStore, monHocRepo, giangVienRepo, phongHocRepo, khoaHocMonHocRepo),
+                KetQuaHocTapRepository = new FakeKetQuaHocTapRepository(trainingStore),
+                PhieuThuRepository = new FakePhieuThuRepository(trainingStore),
+                BaoCaoRepository = new FakeBaoCaoRepository(trainingStore, khoaHocMonHocRepo, monHocRepo, hocVienRepo, khoaHocRepo)
             };
         }
 
@@ -47,11 +63,17 @@ public static class RepositoryFactory
                 MonHocRepository = new SqlMonHocRepository(connectionFactory),
                 KhoaHocRepository = new SqlKhoaHocRepository(connectionFactory),
                 KhoaHocMonHocRepository = new SqlKhoaHocMonHocRepository(connectionFactory),
-                PhongHocRepository = new SqlPhongHocRepository(connectionFactory)
+                PhongHocRepository = new SqlPhongHocRepository(connectionFactory),
+
+                LopHocRepository = new SqlLopHocRepository(connectionFactory),
+                DangKyLopHocRepository = new SqlDangKyLopHocRepository(connectionFactory),
+                LichHocRepository = new SqlLichHocRepository(connectionFactory),
+                KetQuaHocTapRepository = new SqlKetQuaHocTapRepository(connectionFactory),
+                PhieuThuRepository = new SqlPhieuThuRepository(connectionFactory),
+                BaoCaoRepository = new SqlBaoCaoRepository(connectionFactory)
             };
         }
 
         throw new InvalidOperationException($"Chế độ DataProvider '{config.DataProvider}' không được hỗ trợ.");
     }
 }
-

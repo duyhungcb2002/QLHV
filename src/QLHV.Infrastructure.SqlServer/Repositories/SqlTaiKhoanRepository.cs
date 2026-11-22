@@ -16,6 +16,27 @@ public class SqlTaiKhoanRepository : ITaiKhoanRepository
         _connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
     }
 
+    public async Task<TaiKhoanDto?> GetByIdAsync(int id)
+    {
+        await using var connection = await SqlRepositoryHelper.OpenConnectionAsync(_connectionFactory);
+        const string sql = """
+            SELECT Id, TenDangNhap, VaiTro, GiangVienId, TrangThai, LanDangNhapCuoi
+            FROM dbo.TaiKhoan
+            WHERE Id = @Id;
+            """;
+
+        await using var command = new SqlCommand(sql, connection);
+        command.Parameters.Add(new SqlParameter("@Id", SqlDbType.Int) { Value = id });
+
+        await using var reader = await command.ExecuteReaderAsync();
+        if (await reader.ReadAsync())
+        {
+            return MapTaiKhoan(reader);
+        }
+
+        return null;
+    }
+
     public async Task<TaiKhoanDto?> GetByTenDangNhapAsync(string tenDangNhap)
     {
         if (string.IsNullOrWhiteSpace(tenDangNhap)) return null;
@@ -111,4 +132,3 @@ public class SqlTaiKhoanRepository : ITaiKhoanRepository
         };
     }
 }
-

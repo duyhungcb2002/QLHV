@@ -2,6 +2,7 @@ using QLHV.Contracts.Dtos;
 using QLHV.Contracts.Enums;
 using QLHV.Core.Security;
 using QLHV.Core.Services;
+using QLHV.WinForms.Configuration;
 
 namespace QLHV.WinForms.Forms;
 
@@ -28,6 +29,7 @@ public partial class FrmKhoaHocMonHoc : Form
 
         lblCourseInfo.Text = $"Khóa học: [{_khoaHoc.MaKhoaHoc}] {_khoaHoc.TenKhoaHoc}";
 
+        dgvSubjects.ApplyStandardGridStyle();
         dgvSubjects.AutoGenerateColumns = false;
         dgvSubjects.SelectionChanged += (_, _) => UpdateButtonStates();
 

@@ -32,5 +32,15 @@ public static class CatalogFieldLimits
     public const int TenDangNhap = 50;
     public const int MatKhauHash = 256;
     public const int VaiTro = 30;
-}
 
+    // Student Extended Profile (Hồ sơ học viên mở rộng)
+    public const int SoDinhDanh = 20;
+    public const int NoiCapGiayTo = 150;
+    public const int HoTenNguoiGiamHo = 100;
+    public const int DienThoaiNguoiGiamHo = 20;
+    public const int QuanHeNguoiGiamHo = 50;
+    public const int NguonTuyenSinh = 50;
+    public const int NgheNghiep = 100;
+    public const int DonViCongTac = 200;
+    public const int GhiChuDacBiet = 1000;
+}

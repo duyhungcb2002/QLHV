@@ -39,9 +39,9 @@ partial class FrmGiangVien
         pnlBottom.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvGiangVien).BeginInit();
         SuspendLayout();
-        // 
+        //
         // pnlTop
-        // 
+        //
         pnlTop.BackColor = Color.White;
         pnlTop.Controls.Add(lblStatusFilter);
         pnlTop.Controls.Add(cboFilterStatus);
@@ -55,9 +55,9 @@ partial class FrmGiangVien
         pnlTop.Name = "pnlTop";
         pnlTop.Size = new Size(880, 85);
         pnlTop.TabIndex = 0;
-        // 
+        //
         // lblStatusFilter
-        // 
+        //
         lblStatusFilter.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         lblStatusFilter.AutoSize = true;
         lblStatusFilter.Location = new Point(510, 52);
@@ -65,9 +65,9 @@ partial class FrmGiangVien
         lblStatusFilter.Size = new Size(62, 15);
         lblStatusFilter.TabIndex = 6;
         lblStatusFilter.Text = "Trạng thái:";
-        // 
+        //
         // cboFilterStatus
-        // 
+        //
         cboFilterStatus.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         cboFilterStatus.DropDownStyle = ComboBoxStyle.DropDownList;
         cboFilterStatus.FormattingEnabled = true;
@@ -75,9 +75,9 @@ partial class FrmGiangVien
         cboFilterStatus.Name = "cboFilterStatus";
         cboFilterStatus.Size = new Size(130, 23);
         cboFilterStatus.TabIndex = 5;
-        // 
+        //
         // btnRefresh
-        // 
+        //
         btnRefresh.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         btnRefresh.BackColor = Color.FromArgb(243, 244, 246);
         btnRefresh.FlatAppearance.BorderColor = Color.FromArgb(209, 213, 219);
@@ -89,9 +89,9 @@ partial class FrmGiangVien
         btnRefresh.Text = "Làm mới";
         btnRefresh.UseVisualStyleBackColor = false;
         btnRefresh.Click += btnRefresh_Click;
-        // 
+        //
         // btnSearch
-        // 
+        //
         btnSearch.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         btnSearch.BackColor = Color.FromArgb(30, 64, 175);
         btnSearch.FlatAppearance.BorderSize = 0;
@@ -104,18 +104,18 @@ partial class FrmGiangVien
         btnSearch.Text = "Tìm kiếm";
         btnSearch.UseVisualStyleBackColor = false;
         btnSearch.Click += btnSearch_Click;
-        // 
+        //
         // txtSearch
-        // 
+        //
         txtSearch.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         txtSearch.Location = new Point(140, 48);
         txtSearch.Name = "txtSearch";
         txtSearch.PlaceholderText = "Nhập mã, tên giảng viên, chuyên môn để tìm...";
         txtSearch.Size = new Size(355, 23);
         txtSearch.TabIndex = 2;
-        // 
+        //
         // lblSearch
-        // 
+        //
         lblSearch.AutoSize = true;
         lblSearch.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
         lblSearch.Location = new Point(15, 52);
@@ -123,9 +123,9 @@ partial class FrmGiangVien
         lblSearch.Size = new Size(111, 15);
         lblSearch.TabIndex = 1;
         lblSearch.Text = "Từ khóa tìm kiếm:";
-        // 
+        //
         // lblTitle
-        // 
+        //
         lblTitle.AutoSize = true;
         lblTitle.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point);
         lblTitle.ForeColor = Color.FromArgb(30, 64, 175);
@@ -134,9 +134,9 @@ partial class FrmGiangVien
         lblTitle.Size = new Size(230, 25);
         lblTitle.TabIndex = 0;
         lblTitle.Text = "DANH MỤC GIẢNG VIÊN";
-        // 
+        //
         // pnlBottom
-        // 
+        //
         pnlBottom.BackColor = Color.FromArgb(249, 250, 251);
         pnlBottom.Controls.Add(btnDeactivate);
         pnlBottom.Controls.Add(btnEdit);
@@ -146,9 +146,9 @@ partial class FrmGiangVien
         pnlBottom.Name = "pnlBottom";
         pnlBottom.Size = new Size(880, 50);
         pnlBottom.TabIndex = 1;
-        // 
+        //
         // btnDeactivate
-        // 
+        //
         btnDeactivate.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         btnDeactivate.BackColor = Color.FromArgb(239, 68, 68);
         btnDeactivate.FlatAppearance.BorderSize = 0;
@@ -162,9 +162,9 @@ partial class FrmGiangVien
         btnDeactivate.Text = "Ngừng hoạt động";
         btnDeactivate.UseVisualStyleBackColor = false;
         btnDeactivate.Click += btnDeactivate_Click;
-        // 
+        //
         // btnEdit
-        // 
+        //
         btnEdit.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         btnEdit.BackColor = Color.FromArgb(245, 158, 11);
         btnEdit.FlatAppearance.BorderSize = 0;
@@ -178,9 +178,9 @@ partial class FrmGiangVien
         btnEdit.Text = "Cập nhật";
         btnEdit.UseVisualStyleBackColor = false;
         btnEdit.Click += btnEdit_Click;
-        // 
+        //
         // btnAdd
-        // 
+        //
         btnAdd.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         btnAdd.BackColor = Color.FromArgb(16, 185, 129);
         btnAdd.FlatAppearance.BorderSize = 0;
@@ -194,9 +194,9 @@ partial class FrmGiangVien
         btnAdd.Text = "Thêm mới";
         btnAdd.UseVisualStyleBackColor = false;
         btnAdd.Click += btnAdd_Click;
-        // 
+        //
         // dgvGiangVien
-        // 
+        //
         dgvGiangVien.AllowUserToAddRows = false;
         dgvGiangVien.AllowUserToDeleteRows = false;
         dgvGiangVien.BackgroundColor = Color.White;
@@ -211,65 +211,65 @@ partial class FrmGiangVien
         dgvGiangVien.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         dgvGiangVien.Size = new Size(880, 395);
         dgvGiangVien.TabIndex = 2;
-        // 
+        //
         // colId
-        // 
+        //
         colId.DataPropertyName = "Id";
         colId.HeaderText = "ID";
         colId.Name = "colId";
         colId.ReadOnly = true;
         colId.Visible = false;
-        // 
+        //
         // colMaGiangVien
-        // 
+        //
         colMaGiangVien.DataPropertyName = "MaGiangVien";
         colMaGiangVien.HeaderText = "Mã GV";
         colMaGiangVien.Name = "colMaGiangVien";
         colMaGiangVien.ReadOnly = true;
         colMaGiangVien.Width = 90;
-        // 
+        //
         // colHoTen
-        // 
+        //
         colHoTen.DataPropertyName = "HoTen";
         colHoTen.HeaderText = "Họ và tên";
         colHoTen.Name = "colHoTen";
         colHoTen.ReadOnly = true;
         colHoTen.Width = 180;
-        // 
+        //
         // colChuyenMon
-        // 
+        //
         colChuyenMon.DataPropertyName = "ChuyenMon";
         colChuyenMon.HeaderText = "Chuyên môn giảng dạy";
         colChuyenMon.Name = "colChuyenMon";
         colChuyenMon.ReadOnly = true;
         colChuyenMon.Width = 220;
-        // 
+        //
         // colDienThoai
-        // 
+        //
         colDienThoai.DataPropertyName = "DienThoai";
         colDienThoai.HeaderText = "Điện thoại";
         colDienThoai.Name = "colDienThoai";
         colDienThoai.ReadOnly = true;
         colDienThoai.Width = 110;
-        // 
+        //
         // colEmail
-        // 
+        //
         colEmail.DataPropertyName = "Email";
         colEmail.HeaderText = "Email";
         colEmail.Name = "colEmail";
         colEmail.ReadOnly = true;
         colEmail.Width = 150;
-        // 
+        //
         // colTrangThai
-        // 
+        //
         colTrangThai.DataPropertyName = "TrangThai";
         colTrangThai.HeaderText = "Trạng thái";
         colTrangThai.Name = "colTrangThai";
         colTrangThai.ReadOnly = true;
         colTrangThai.Width = 110;
-        // 
+        //
         // FrmGiangVien
-        // 
+        //
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(880, 530);

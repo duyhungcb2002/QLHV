@@ -1,8 +1,8 @@
 # Hệ Thống Quản Lý Học Viên (QLHV)
 
-> **Môn học:** Lập trình Windows (C# Windows Forms)  
-> **Thành viên phụ trách Core / Kiến trúc:** Duy Hưng  
-> **Phiên bản:** 1.1.0 (Tích hợp SQL Server ADO.NET & Hỗ trợ chế độ Fake Data Demo)
+> **Môn học:** Lập trình Windows (C# Windows Forms)
+> **Thành viên phụ trách Core / Kiến trúc:** Duy Hưng
+> **Phiên bản:** 2.0.0 (Mega MVP - Đầy đủ các phân hệ Lớp học, Lịch học, Điểm, Học phí, Báo cáo & Hỗ trợ kép SQL Server / Fake Data)
 
 ---
 
@@ -34,17 +34,18 @@ Dự án được xây dựng với kiến trúc hướng dịch vụ nhiều t�
   - `FrmPhongHoc` & `FrmPhongHocEdit`: Quản lý danh mục phòng học & sức chứa.
   - `FrmBaoCaoMau`: Mẫu giao diện báo cáo chuẩn (dùng lại được) sẵn sàng cho Chu Đức.
 - **Logging an toàn & Che giấu thông tin nhạy cảm**: `FileAppLogger` tự động ghi log vào thư mục `logs/`, làm sạch toàn diện thông tin nhạy cảm (`Password`, `Pwd`, `User ID`, `UID`, `Connection String`) thành `[REDACTED]` trong cả message chính, exception, inner exceptions và stack trace.
-- **Hệ thống Kiểm thử tự động (Unit & Integration Tests)**: 103/103 bài test MSTest (100% Passed) bao phủ toàn diện Auth, Phân quyền UI, Bảo vệ ma trận quyền & phiên đăng nhập (`SEC-01`), Hạ tầng `SqlConnectionFactory` (`SQL-01A`), 7 SQL Repositories ADO.NET (`SQL-01B1`), Cấu hình đa chế độ & Composition Root WinForms, Khởi động an toàn, Lọc log bảo mật toàn diện (`SQL-01B2`).
-- **Cập nhật giai đoạn `SQL-01B1 + SQL-01B2` (Kết nối WinForms với SQL Server thật)**:
-  - **7 SQL Repositories ADO.NET (`SQL-01B1`)**: Đã triển khai đầy đủ `SqlTaiKhoanRepository`, `SqlHocVienRepository`, `SqlGiangVienRepository`, `SqlMonHocRepository`, `SqlKhoaHocRepository`, `SqlKhoaHocMonHocRepository`, `SqlPhongHocRepository` trên project `QLHV.Infrastructure.SqlServer`.
-  - **Kết nối WinForms và Cấu hình đa chế độ (`SQL-01B2`)**:
-    - Hỗ trợ chế độ dữ liệu kép qua cấu hình: `SqlServer` (mặc định cho ứng dụng) và `Fake` (chế độ demo/offline khi không có SQL Server).
-    - Thứ tự ưu tiên cấu hình: Biến môi trường (`QLHV_DATA_PROVIDER`, `QLHV_CONNECTION_STRING`) > `appsettings.Local.json` > `appsettings.json`.
-    - Composition root đơn giản, không phụ thuộc framework DI bên ngoài, phù hợp cho sinh viên học tập.
-    - Cơ chế Startup Check: Kiểm tra kết nối SQL Server trước khi mở form đăng nhập. Nếu lỗi, hiển thị thông báo thân thiện (đã che thông tin nhạy cảm), ghi log an toàn và dừng khởi động, tuyệt đối không tự ý fallback ngầm về Fake.
-    - Khóa bảo vệ database: Nghiêm cấm chạy ứng dụng chính với database kiểm thử `QLHV_Test`. Toàn bộ test tự động có thao tác ghi chỉ chạy trên `QLHV_Test`, tuyệt đối không thay đổi database chính `QLHV`.
-    - Cập nhật giao diện: Badge hiển thị môi trường bắt buộc trên `FrmMain` (`Môi trường: SQL Server` hoặc `Môi trường: Fake Data`), cập nhật nhãn tài khoản mẫu trên `FrmLogin`.
-    - Trạng thái nghiệm thu: Phần triển khai (implementation) và toàn bộ kiểm thử tự động (automated tests) đã hoàn thành đạt 100%. Kiểm thử giao diện thực tế (manual WinForms UI UAT) đang chờ người dùng trực tiếp mở ứng dụng và xác nhận trên môi trường desktop.
+- **Hệ thống Kiểm thử tự động (Unit & Integration Tests)**: 164/164 bài test MSTest (100% Passed, gồm 138 non-SQL + 26 SQL Integration Tests) kiểm thử tự động Auth, WinForms UI Smoke, Bảo vệ ma trận quyền & phiên đăng nhập (`SEC-01`), Hạ tầng `SqlConnectionFactory` (`SQL-01A`), 13 SQL Repositories ADO.NET (`SQL-01B1` & Mega MVP), Toàn bộ Services phân hệ Đào tạo, Xếp lớp, Điểm, Học phí và Báo cáo, Mở rộng hồ sơ học viên 11 trường & giảng viên chủ nhiệm lớp học, Cấu hình đa chế độ & Composition Root WinForms, Khởi động an toàn, Lọc log bảo mật.
+- **Cập nhật giai đoạn `Mega MVP Implementation & Student Profile 05` (Hoàn thành trọn gói toàn bộ phân hệ nghiệp vụ)**:
+  - **Mở rộng hồ sơ học viên & Giảng viên chủ nhiệm (`STUDENT-PROFILE-AND-TRAINING-UI-05` & `FINAL-AUDIT-05C`)**: Mở rộng 11 trường hồ sơ học viên trong `dbo.HocVien` (Số định danh, ngày cấp, nơi cấp, người giám hộ, nhân viên phụ trách, nguồn tuyển sinh, nghề nghiệp, đơn vị công tác, ghi chú đặc biệt), form sửa `FrmHocVienEdit` thiết kế 5 tab hiện đại kèm đếm ký tự ghi chú, form chi tiết `FrmHocVienDetail` xem lịch sử học tập (tra cứu qua `DangKyLopHoc`), che mờ số định danh CCCD/CMND dạng `********1234` (giữ 4 chữ số cuối) và DTO trả về tầng giao diện đã được che đối với tài khoản không có quyền `CatalogManage` (chỉ tài khoản có quyền `CatalogManage` mới được xem và chuyển đổi hiển thị số đầy đủ), và bổ sung Giảng viên chủ nhiệm cho Lớp học (`dbo.LopHoc.GiangVienChuNhiemId` - ở tầng schema CSDL cho phép null nhằm tương thích ngược với dữ liệu cũ, nhưng tại tầng Service `LopHocService` áp dụng quy tắc nghiệp vụ bắt buộc phải có giảng viên chủ nhiệm đang hoạt động khi tạo mới hoặc cập nhật).
+  - **Chuẩn hóa giao diện Đào tạo (`FrmDaoTao`)**: Thiết lập tường minh các cột cho 3 DataGridView (`dgvLopHoc`, `dgvDangKy`, `dgvLichHoc`), tắt `AutoGenerateColumns = false`, tiêu đề tiếng Việt chuẩn, căn lề và định dạng ngày tháng/tiền tệ chuyên nghiệp.
+  - **Sửa triệt để lỗi tiếng Việt (Mojibake)**: Áp dụng `007_unicode_data_repair.sql` chuẩn hóa an toàn dữ liệu mẫu nghiệp vụ bằng collation nhị phân (`COLLATE Latin1_General_BIN`), không dùng wildcard rộng để tránh ghi đè dữ liệu tiếng Việt hợp lệ, kèm UTF-8 with BOM (`.editorconfig`) cho tất cả các script SQL.
+  - **Phân hệ Đào tạo & Lớp học (`QLHV.Features.Training`)**: Quản lý Lớp học (`FrmDaoTao` - Tab Lớp), Xếp học viên vào lớp kèm lưu vết snapshot học phí (`FrmChonHocVien`), Quản lý Lịch học kiểm tra xung đột trùng phòng và trùng giảng viên (`FrmLichHocEdit`).
+  - **Phân hệ Kết quả học tập (`FrmDiem`)**: Quản lý điểm tổng kết, tự động xếp loại Đạt / Không đạt (ngưỡng 5.00), kiểm tra phân công giảng viên và ràng buộc môn học thuộc khóa.
+  - **Phân hệ Học phí & Phiếu thu (`FrmHocPhi`, `FrmThuHocPhi`)**: Quản lý công nợ, thu học phí ngăn chặn thu vượt công nợ, lập phiếu thu và hủy phiếu thu an toàn có lưu lý do hủy (Soft-Cancel audit).
+  - **Phân hệ Báo cáo & Thống kê (`FrmBaoCao`)**: 5 tab báo cáo chuyên sâu (Học viên theo lớp, Lịch học theo lớp, Lịch giảng dạy theo giảng viên, Báo cáo kết quả học tập & Thống kê tỷ lệ môn học, Báo cáo công nợ học phí theo lớp).
+  - **Bộ tài liệu kỹ thuật hoàn chỉnh**: Đầy đủ tài liệu khảo sát yêu cầu, phân tích thiết kế, từ điển dữ liệu & sơ đồ ERD, hướng dẫn cài đặt môi trường, hướng dẫn sử dụng và bộ kịch bản kiểm thử nghiệm thu UAT (`docs/` và `qa/`).
+  - **Trạng thái nghiệm thu**: 164 bài test tự động PASSED (138 non-SQL + 26 SQL Server Integration Tests). Kiểm thử thủ công UI ghi nhận trạng thái chuẩn hóa: `MANUAL_UI_UAT_NOT_VERIFIED`.
+  - **Trạng thái cảnh báo**: 0 cảnh báo trình biên dịch, 0 cảnh báo MSTest analyzer (cảnh báo `NU1900` của NuGet Audit chỉ xuất hiện khi chạy máy cô lập offline không có kết nối internet ra ngoài).
 
 ---
 
@@ -64,15 +65,18 @@ Dự án được xây dựng với kiến trúc hướng dịch vụ nhiều t�
 ```text
 QLHV/
 ├── QLHV.sln
-├── database/                     # Script CSDL SQL Server (001_schema.sql, 002_seed.sql, README.md)
+├── database/                     # Script CSDL SQL Server (001 đến 007, README.md)
 ├── src/
 │   ├── QLHV.Contracts/           # Enums, DTOs, Filters, OperationResult, ErrorCodes
 │   ├── QLHV.Core/                # Abstractions, Repositories/Services Interfaces, Security, Logging, Validation
-│   ├── QLHV.Infrastructure.SqlServer/ # SqlConnectionFactory, SqlServerOptions & 7 SQL Repositories ADO.NET
-│   ├── QLHV.Features.Catalog/    # In-memory fake repositories & Services triển khai quy tắc nghiệp vụ
+│   ├── QLHV.Infrastructure.SqlServer/ # SqlConnectionFactory, SqlServerOptions & 13 SQL Repositories ADO.NET
+│   ├── QLHV.Features.Catalog/    # In-memory fake repositories & Services danh mục
+│   ├── QLHV.Features.Training/   # Nghiệp vụ Đào tạo, Lớp học, Lịch học, Điểm, Học phí, Báo cáo (Fake & Services)
 │   └── QLHV.WinForms/            # Giao diện Forms, UserControls, Composition Root (Program.cs), appsettings.json
 ├── tests/
-│   └── QLHV.Tests/               # Bộ kiểm thử đơn vị & tích hợp MSTest (103 tests passed)
+│   └── QLHV.Tests/               # Bộ kiểm thử đơn vị & tích hợp MSTest (164 tests passed)
+├── docs/                         # Hồ sơ phân tích, thiết kế, kiến trúc, cài đặt & hướng dẫn sử dụng
+├── qa/                           # Kịch bản kiểm thử nghiệm thu UAT (MANUAL_UI_UAT_NOT_VERIFIED)
 ├── README.md                     # Tài liệu tổng quan và hướng dẫn chạy hệ thống
 ├── CONTRIBUTING.md               # Quy định làm việc nhóm và quy ước nhánh Git
 ├── INTEGRATION_NOTES.md          # Ghi chú kỹ thuật hướng dẫn tích hợp cho Bá Hiệp & Chu Đức
@@ -156,12 +160,12 @@ dotnet run --project src\QLHV.WinForms\QLHV.WinForms.csproj
 cd D:\HMNU\Laptrinhwindow\QLHV
 dotnet test tests\QLHV.Tests\QLHV.Tests.csproj
 ```
-Kết quả chạy: **103/103 tests PASSED (100%)** (gồm Auth, WinForms UI Smoke, Catalog Validation & CRUD, Service Authorization, Session & Matrix immutability, SqlConnectionFactory, 10 SQL Integration Tests trên database `QLHV_Test`, AppConfig/Provider wiring, và FileAppLogger Sanitization).
+Kết quả chạy: **164/164 tests PASSED (100%)** (gồm 138 non-SQL + 26 SQL Integration Tests trên database `QLHV_Test`, Auth, WinForms UI Smoke toàn bộ các Form, Catalog Validation & CRUD, Service Authorization, Session & Matrix immutability, SqlConnectionFactory, AppConfig/Provider wiring, FileAppLogger Sanitization, và toàn bộ Nghiệp vụ Đào tạo / Điểm / Học phí / Báo cáo / Hồ sơ học viên / Giảng viên chủ nhiệm).
 
 > [!IMPORTANT]
-> **Yêu cầu đối với 10 bài SQL Integration Tests:**
+> **Yêu cầu đối với 26 bài SQL Integration Tests:**
 > - Cần có Microsoft SQL Server Express (hoặc LocalDB) đang chạy.
-> - Cần chuẩn bị trước cơ sở dữ liệu kiểm thử riêng biệt **`QLHV_Test`** (đã chạy `database/001_schema.sql` và `database/002_seed.sql`). Tuyệt đối không chạy integration tests trên database ứng dụng `QLHV`.
+> - Cần chuẩn bị trước cơ sở dữ liệu kiểm thử riêng biệt **`QLHV_Test`** (đã chạy toàn bộ 7 script trong `database/`). Tuyệt đối không chạy integration tests trên database ứng dụng `QLHV`.
 > - Mặc định bộ test sử dụng Data Source: `Server=.\SQLEXPRESS;Database=QLHV_Test;Integrated Security=True;Encrypt=False;TrustServerCertificate=True;`.
 > - Có thể chỉ định chuỗi kết nối kiểm thử qua biến môi trường `QLHV_TEST_CONNECTION_STRING`:
 >   ```powershell
@@ -174,16 +178,16 @@ Kết quả chạy: **103/103 tests PASSED (100%)** (gồm Auth, WinForms UI Smo
 
 ## 10. Danh sách Tài khoản Demo
 
-> ⚠️ **CẢNH BÁO QUAN TRỌNG:**  
+> ⚠️ **CẢNH BÁO QUAN TRỌNG:**
 > Các tài khoản và mật khẩu dưới đây **chỉ dùng cho môi trường demo / kiểm thử nội bộ**, tuyệt đối không sử dụng cho môi trường sản xuất (production). Trong mã nguồn, toàn bộ mật khẩu được băm (hash) bằng thuật toán PBKDF2 trước khi lưu vào repository.
 
 | Tên đăng nhập | Mật khẩu demo | Vai trò | Quyền hạn đặc trưng |
 |---|---|---|---|
-| **`admin`** | `Admin@123` | **ADMIN** | Toàn bộ quyền: Xem & Quản lý Catalog, Đào tạo, Học phí, Điểm, Báo cáo, Quản lý người dùng. |
-| **`daotao`** | `DaoTao@123` | **DAOTAO** | Xem & Quản lý Catalog, Xem & Quản lý phân hệ Đào tạo. |
-| **`thungan`** | `ThuNgan@123` | **THUNGAN** | Xem danh mục (chỉ đọc), Quản lý phân hệ Học phí. |
-| **`giangvien`** | `GiangVien@123` | **GIANGVIEN** | Xem danh mục (chỉ đọc), Nhập điểm số học viên. |
-| **`quanly`** | `QuanLy@123` | **QUANLY** | Xem danh mục (chỉ đọc), Xem báo cáo & thống kê. |
+| **`admin`** | `Admin@123` | **ADMIN** | Toàn bộ quyền: Xem & Quản lý Catalog, Đào tạo, Học phí, Điểm, Báo cáo. |
+| **`daotao`** | `DaoTao@123` | **DAOTAO** | Xem & Quản lý Catalog, Xem & Quản lý phân hệ Đào tạo (Lớp học, Xếp lớp, Lịch học). Không có quyền Nhập điểm, Thu học phí, Báo cáo. |
+| **`thungan`** | `ThuNgan@123` | **THUNGAN** | Xem danh mục (chỉ đọc), Quản lý phân hệ Học phí & Phiếu thu. Không có quyền Đào tạo, Điểm, Báo cáo. |
+| **`giangvien`** | `GiangVien@123` | **GIANGVIEN** | Xem danh mục (chỉ đọc), Nhập điểm số học viên cho các lớp phụ trách. Không có quyền Quản lý Đào tạo hay Báo cáo. |
+| **`quanly`** | `QuanLy@123` | **QUANLY** | Xem danh mục (chỉ đọc), Xem báo cáo & thống kê 5 phân hệ. Không có quyền sửa danh mục, Đào tạo, Nhập điểm hay Thu học phí. |
 | **`bikhoa`** | `BiKhoa@123` | **DAOTAO** *(Bị khóa)* | Dùng để kiểm thử thông báo lỗi khi tài khoản bị khóa (`ACCOUNT_LOCKED`). |
 
 ---
@@ -220,7 +224,7 @@ Hạ tầng SQL Server được triển khai đồng bộ qua hai giai đoạn:
    - `RepositoryFactory.CreateRepositories(config, passwordHasher)` khởi tạo tập repository tương ứng theo cấu hình.
    - Các Service Catalog phụ thuộc thuần túy vào Repository Interfaces định nghĩa tại `QLHV.Core.Repositories`.
 3. **Kiểm thử tích hợp độc lập:**
-   - Bộ 10 bài test `SqlServerIntegrationTests` chạy trên database chuyên biệt `QLHV_Test`, hoàn toàn cách ly với database ứng dụng `QLHV`.
+   - Bộ 26 bài test `SqlServerIntegrationTests` chạy trên database chuyên biệt `QLHV_Test`, hoàn toàn cách ly với database ứng dụng `QLHV`.
 
 ---
 
@@ -246,9 +250,9 @@ Hạ tầng SQL Server được triển khai đồng bộ qua hai giai đoạn:
 | **DH-03** | Đăng nhập, phân quyền ma trận, Form chính và điều hướng | **DONE** | FrmLogin, FrmMain, phân quyền tự động ẩn/khóa menu theo quyền người dùng. |
 | **DH-04** | CRUD Học viên và Giảng viên | **DONE** | Đầy đủ form danh sách, form nhập liệu, validation, ngừng hoạt động, in-memory repository. |
 | **DH-05** | CRUD Môn học, Khóa học, Quan hệ Khóa-Môn, Phòng học | **DONE** | Đầy đủ form danh mục, dialog gán môn học vào khóa, kiểm tra ràng buộc. |
-| **DH-06** | Ổn định service dùng chung và tích hợp module của thành viên khác | **PENDING INTEGRATION** | Đang chờ module Training từ Bá Hiệp. |
-| **DH-07** | Kiểm tra quyền ở service, chuẩn hóa lỗi/logging, lọc dữ liệu nhạy cảm và tích hợp SQL Server | **DONE** | Hoàn thành 100% phân quyền Service, Logging an toàn lọc nhạy cảm, 7 SQL Repositories ADO.NET và 103 bài test tự động. |
-| **DH-08** | Đóng gói, cấu hình đa chế độ (SQL/Fake), release và kiểm tra máy sạch | **PARTIAL** | Đã hoàn thiện cấu hình SQL/Fake, Startup check, chờ module hoàn thiện để đóng gói bản phát hành chính thức. |
+| **DH-06** | Ổn định service dùng chung và tích hợp module của thành viên khác | **DONE** | Tích hợp toàn diện `QLHV.Features.Training`, liên kết toàn bộ phân hệ vào FrmMain. |
+| **DH-07** | Kiểm tra quyền ở service, chuẩn hóa lỗi/logging, lọc dữ liệu nhạy cảm và tích hợp SQL Server | **DONE** | 13 SQL Repositories ADO.NET, 164 bài test MSTest (138 non-SQL + 26 SQL), bảo mật log nhạy cảm và RBAC 2 lớp. |
+| **DH-08** | Đóng gói, cấu hình đa chế độ (SQL/Fake), release và kiểm tra máy sạch | **DONE** | Cấu hình chế độ kép hoạt động trơn tru; bản build Release độc lập sẵn sàng. |
 
 ---
 
@@ -273,16 +277,12 @@ Hạ tầng SQL Server được triển khai đồng bộ qua hai giai đoạn:
 
 ## 16. Đầu vào đang cần từ Bá Hiệp và Chu Đức
 
-### Cần Chu Đức cung cấp:
-- [x] Schema CSDL chính thức (`database/001_schema.sql` - đã hoàn thành ở `SQL-01A`).
-- [x] Quy ước đặt tên bảng và cột (đồng nhất với DTO trong `QLHV.Contracts.Dtos` - đã xong).
-- [x] Script dữ liệu mẫu SQL (`database/002_seed.sql` - đã hoàn thành ở `SQL-01A`).
-- [x] File chuỗi kết nối mẫu không chứa mật khẩu thực (`appsettings.sample.json` - đã xong).
-- [x] Triển khai 7 ADO.NET Repositories thực tế theo các interface trong `QLHV.Core.Repositories` (`SQL-01B1`).
-- [x] Kiểm thử tích hợp SQL trên CSDL thật (SQL runtime integration tests - `SQL-01B1`).
-- [x] Nối WinForms với SQL Server và cấu hình đa chế độ (`SQL-01B2`).
-
-### Cần Bá Hiệp cung cấp:
-- [ ] Các DTOs và Contracts cho module Training (Lớp học, Phiếu thu, Điểm số).
-- [ ] Triển khai các Services nghiệp vụ đào tạo kế thừa mẫu `OperationResult<T>`.
-- [ ] Các Windows Forms cho phân hệ Lớp học, Điểm số và Học phí để tích hợp vào menu `FrmMain`.
+### Kết quả hoàn thiện toàn bộ phân hệ (Mega MVP Implementation):
+- [x] Schema CSDL hoàn chỉnh (`001_schema.sql`, `002_seed.sql`, `003_operations_schema.sql`, `004_operations_seed.sql`, `005_operations_hardening.sql`, `006_student_profile_and_class_advisor.sql`, `007_unicode_data_repair.sql`).
+- [x] Triển khai 13 ADO.NET Repositories thực tế theo các interface trong `QLHV.Core.Repositories`.
+- [x] Kiểm thử tích hợp SQL trên CSDL thật (`SqlServerIntegrationTests`).
+- [x] Nối WinForms với SQL Server và cấu hình đa chế độ (`SqlServer` và `Fake`).
+- [x] Các DTOs và Contracts cho module Training (Lớp học, Lịch học, Điểm số, Học phí, Báo cáo).
+- [x] Triển khai toàn bộ Services nghiệp vụ đào tạo kế thừa mẫu `OperationResult<T>`.
+- [x] Xây dựng đầy đủ các Windows Forms cho phân hệ Lớp học, Điểm số, Học phí, Báo cáo tích hợp vào menu `FrmMain`.
+- [x] Bộ tài liệu thiết kế, hướng dẫn cài đặt, sử dụng và kịch bản kiểm thử UAT (`docs/`, `qa/`).

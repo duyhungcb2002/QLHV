@@ -32,9 +32,9 @@ partial class FrmKhoaHocMonHoc
         pnlBottom.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvSubjects).BeginInit();
         SuspendLayout();
-        // 
+        //
         // pnlTop
-        // 
+        //
         pnlTop.BackColor = Color.White;
         pnlTop.Controls.Add(lblCourseInfo);
         pnlTop.Controls.Add(lblTitle);
@@ -43,9 +43,9 @@ partial class FrmKhoaHocMonHoc
         pnlTop.Name = "pnlTop";
         pnlTop.Size = new Size(680, 75);
         pnlTop.TabIndex = 0;
-        // 
+        //
         // lblCourseInfo
-        // 
+        //
         lblCourseInfo.AutoSize = true;
         lblCourseInfo.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
         lblCourseInfo.ForeColor = Color.FromArgb(55, 65, 81);
@@ -54,9 +54,9 @@ partial class FrmKhoaHocMonHoc
         lblCourseInfo.Size = new Size(139, 19);
         lblCourseInfo.TabIndex = 1;
         lblCourseInfo.Text = "Khóa học: [Thông tin]";
-        // 
+        //
         // lblTitle
-        // 
+        //
         lblTitle.AutoSize = true;
         lblTitle.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
         lblTitle.ForeColor = Color.FromArgb(30, 64, 175);
@@ -65,9 +65,9 @@ partial class FrmKhoaHocMonHoc
         lblTitle.Size = new Size(335, 21);
         lblTitle.TabIndex = 0;
         lblTitle.Text = "QUẢN LÝ MÔN HỌC THUỘC KHÓA ĐÀO TẠO";
-        // 
+        //
         // pnlBottom
-        // 
+        //
         pnlBottom.BackColor = Color.FromArgb(249, 250, 251);
         pnlBottom.Controls.Add(btnClose);
         pnlBottom.Controls.Add(btnRemove);
@@ -78,9 +78,9 @@ partial class FrmKhoaHocMonHoc
         pnlBottom.Name = "pnlBottom";
         pnlBottom.Size = new Size(680, 50);
         pnlBottom.TabIndex = 1;
-        // 
+        //
         // btnClose
-        // 
+        //
         btnClose.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         btnClose.BackColor = Color.FromArgb(229, 231, 235);
         btnClose.FlatAppearance.BorderSize = 0;
@@ -92,9 +92,9 @@ partial class FrmKhoaHocMonHoc
         btnClose.Text = "Đóng";
         btnClose.UseVisualStyleBackColor = false;
         btnClose.Click += btnClose_Click;
-        // 
+        //
         // btnRemove
-        // 
+        //
         btnRemove.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         btnRemove.BackColor = Color.FromArgb(239, 68, 68);
         btnRemove.FlatAppearance.BorderSize = 0;
@@ -108,9 +108,9 @@ partial class FrmKhoaHocMonHoc
         btnRemove.Text = "Xóa môn";
         btnRemove.UseVisualStyleBackColor = false;
         btnRemove.Click += btnRemove_Click;
-        // 
+        //
         // btnEdit
-        // 
+        //
         btnEdit.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         btnEdit.BackColor = Color.FromArgb(245, 158, 11);
         btnEdit.FlatAppearance.BorderSize = 0;
@@ -124,9 +124,9 @@ partial class FrmKhoaHocMonHoc
         btnEdit.Text = "Sửa thứ tự";
         btnEdit.UseVisualStyleBackColor = false;
         btnEdit.Click += btnEdit_Click;
-        // 
+        //
         // btnAdd
-        // 
+        //
         btnAdd.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         btnAdd.BackColor = Color.FromArgb(16, 185, 129);
         btnAdd.FlatAppearance.BorderSize = 0;
@@ -140,9 +140,9 @@ partial class FrmKhoaHocMonHoc
         btnAdd.Text = "Gán môn học";
         btnAdd.UseVisualStyleBackColor = false;
         btnAdd.Click += btnAdd_Click;
-        // 
+        //
         // dgvSubjects
-        // 
+        //
         dgvSubjects.AllowUserToAddRows = false;
         dgvSubjects.AllowUserToDeleteRows = false;
         dgvSubjects.BackgroundColor = Color.White;
@@ -157,41 +157,41 @@ partial class FrmKhoaHocMonHoc
         dgvSubjects.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         dgvSubjects.Size = new Size(680, 315);
         dgvSubjects.TabIndex = 2;
-        // 
+        //
         // colThuTu
-        // 
+        //
         colThuTu.DataPropertyName = "ThuTu";
         colThuTu.HeaderText = "Thứ tự";
         colThuTu.Name = "colThuTu";
         colThuTu.ReadOnly = true;
         colThuTu.Width = 80;
-        // 
+        //
         // colMaMonHoc
-        // 
+        //
         colMaMonHoc.DataPropertyName = "MaMonHoc";
         colMaMonHoc.HeaderText = "Mã môn học";
         colMaMonHoc.Name = "colMaMonHoc";
         colMaMonHoc.ReadOnly = true;
         colMaMonHoc.Width = 110;
-        // 
+        //
         // colTenMonHoc
-        // 
+        //
         colTenMonHoc.DataPropertyName = "TenMonHoc";
         colTenMonHoc.HeaderText = "Tên môn học";
         colTenMonHoc.Name = "colTenMonHoc";
         colTenMonHoc.ReadOnly = true;
         colTenMonHoc.Width = 320;
-        // 
+        //
         // colSoBuoiDuKien
-        // 
+        //
         colSoBuoiDuKien.DataPropertyName = "SoBuoiDuKien";
         colSoBuoiDuKien.HeaderText = "Số buổi";
         colSoBuoiDuKien.Name = "colSoBuoiDuKien";
         colSoBuoiDuKien.ReadOnly = true;
         colSoBuoiDuKien.Width = 120;
-        // 
+        //
         // FrmKhoaHocMonHoc
-        // 
+        //
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(680, 440);

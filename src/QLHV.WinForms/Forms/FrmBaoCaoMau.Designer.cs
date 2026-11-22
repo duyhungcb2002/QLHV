@@ -28,9 +28,9 @@ partial class FrmBaoCaoMau
         pnlTop.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvReport).BeginInit();
         SuspendLayout();
-        // 
+        //
         // pnlTop
-        // 
+        //
         pnlTop.BackColor = Color.White;
         pnlTop.Controls.Add(lblNote);
         pnlTop.Controls.Add(btnExport);
@@ -45,9 +45,9 @@ partial class FrmBaoCaoMau
         pnlTop.Name = "pnlTop";
         pnlTop.Size = new Size(880, 115);
         pnlTop.TabIndex = 0;
-        // 
+        //
         // lblNote
-        // 
+        //
         lblNote.AutoSize = true;
         lblNote.Font = new Font("Segoe UI", 8.5F, FontStyle.Italic, GraphicsUnit.Point);
         lblNote.ForeColor = Color.FromArgb(107, 114, 128);
@@ -56,9 +56,9 @@ partial class FrmBaoCaoMau
         lblNote.Size = new Size(495, 15);
         lblNote.TabIndex = 7;
         lblNote.Text = "* Mẫu giao diện báo cáo chuẩn (Chu Đức sẽ tích hợp câu truy vấn và dữ liệu báo cáo chính thức)";
-        // 
+        //
         // btnExport
-        // 
+        //
         btnExport.BackColor = Color.FromArgb(16, 185, 129);
         btnExport.FlatAppearance.BorderSize = 0;
         btnExport.FlatStyle = FlatStyle.Flat;
@@ -71,9 +71,9 @@ partial class FrmBaoCaoMau
         btnExport.Text = "Xuất Excel";
         btnExport.UseVisualStyleBackColor = false;
         btnExport.Click += btnExport_Click;
-        // 
+        //
         // btnRefresh
-        // 
+        //
         btnRefresh.BackColor = Color.FromArgb(30, 64, 175);
         btnRefresh.FlatAppearance.BorderSize = 0;
         btnRefresh.FlatStyle = FlatStyle.Flat;
@@ -86,45 +86,45 @@ partial class FrmBaoCaoMau
         btnRefresh.Text = "Xem báo cáo";
         btnRefresh.UseVisualStyleBackColor = false;
         btnRefresh.Click += btnRefresh_Click;
-        // 
+        //
         // dtpToDate
-        // 
+        //
         dtpToDate.CustomFormat = "dd/MM/yyyy";
         dtpToDate.Format = DateTimePickerFormat.Custom;
         dtpToDate.Location = new Point(370, 50);
         dtpToDate.Name = "dtpToDate";
         dtpToDate.Size = new Size(130, 23);
         dtpToDate.TabIndex = 4;
-        // 
+        //
         // lblToDate
-        // 
+        //
         lblToDate.AutoSize = true;
         lblToDate.Location = new Point(300, 54);
         lblToDate.Name = "lblToDate";
         lblToDate.Size = new Size(60, 15);
         lblToDate.TabIndex = 3;
         lblToDate.Text = "Đến ngày:";
-        // 
+        //
         // dtpFromDate
-        // 
+        //
         dtpFromDate.CustomFormat = "dd/MM/yyyy";
         dtpFromDate.Format = DateTimePickerFormat.Custom;
         dtpFromDate.Location = new Point(145, 50);
         dtpFromDate.Name = "dtpFromDate";
         dtpFromDate.Size = new Size(130, 23);
         dtpFromDate.TabIndex = 2;
-        // 
+        //
         // lblFromDate
-        // 
+        //
         lblFromDate.AutoSize = true;
         lblFromDate.Location = new Point(15, 54);
         lblFromDate.Name = "lblFromDate";
         lblFromDate.Size = new Size(120, 15);
         lblFromDate.TabIndex = 1;
         lblFromDate.Text = "Khoảng thời gian: Từ:";
-        // 
+        //
         // lblTitle
-        // 
+        //
         lblTitle.AutoSize = true;
         lblTitle.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point);
         lblTitle.ForeColor = Color.FromArgb(30, 64, 175);
@@ -133,9 +133,9 @@ partial class FrmBaoCaoMau
         lblTitle.Size = new Size(342, 25);
         lblTitle.TabIndex = 0;
         lblTitle.Text = "MẪU BÁO CÁO THỐNG KÊ DÙNG LẠI";
-        // 
+        //
         // dgvReport
-        // 
+        //
         dgvReport.AllowUserToAddRows = false;
         dgvReport.AllowUserToDeleteRows = false;
         dgvReport.BackgroundColor = Color.White;
@@ -149,9 +149,9 @@ partial class FrmBaoCaoMau
         dgvReport.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         dgvReport.Size = new Size(880, 415);
         dgvReport.TabIndex = 1;
-        // 
+        //
         // FrmBaoCaoMau
-        // 
+        //
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(880, 530);

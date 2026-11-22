@@ -1,7 +1,7 @@
 # Hướng Dẫn Cơ Sở Dữ Liệu SQL Server (QLHV)
 
 > **Trạng thái kiểm chứng hiện tại:**
-> Toàn bộ script trong thư mục này (`001_schema.sql` và `002_seed.sql`) đã được thực thi và kiểm chứng runtime thành công trên Microsoft SQL Server Express (`.\SQLEXPRESS`).
+> Toàn bộ 7 script trong thư mục này (`001_schema.sql`, `002_seed.sql`, `003_operations_schema.sql`, `004_operations_seed.sql`, `005_operations_hardening.sql`, `006_student_profile_and_class_advisor.sql`, `007_unicode_data_repair.sql`) đã được thực thi và kiểm chứng runtime thành công trên Microsoft SQL Server Express (`.\SQLEXPRESS`).
 > - Database chính của ứng dụng: **`QLHV`** (phục vụ người dùng và ứng dụng WinForms).
 > - Database kiểm thử tích hợp: **`QLHV_Test`** (phục vụ bộ test tự động `SqlServerIntegrationTests`).
 > - Ứng dụng WinForms tuyệt đối không kết nối vào database kiểm thử `QLHV_Test`.
@@ -12,7 +12,7 @@
 
 - **Hệ quản trị CSDL:** Microsoft SQL Server 2019 / 2022 trở lên (Developer, Express) hoặc SQL Server Express LocalDB.
 - **Công cụ thực thi:** SQL Server Management Studio (SSMS), Azure Data Studio hoặc công cụ dòng lệnh `sqlcmd`.
-- **Bảng mã / Collation khuyến nghị:** `Vietnamese_100_CI_AI` (hỗ trợ tiếng Việt đầy đủ, không phân biệt hoa/thường, không phân biệt dấu khi tìm kiếm).
+- **Bảng mã / Collation khuyến nghị:** `Vietnamese_100_CI_AI` (hỗ trợ tiếng Việt đầy đủ, không phân biệt hoa/thường, không phân biệt dấu khi tìm kiếm). Tất cả các script CSDL được mã hóa theo chuẩn UTF-8 with BOM (`utf-8-bom`).
 
 ---
 
@@ -32,16 +32,26 @@ GO
 
 ## 3. Thứ tự chạy Script
 
-Luôn chạy các script theo đúng thứ tự sau trên database `QLHV`:
+Luôn chạy các script theo đúng thứ tự sau trên database `QLHV` (và tương tự cho `QLHV_Test`):
 
-1. **`001_schema.sql`** — Khởi tạo 7 bảng phục vụ Đăng nhập và 6 Danh mục hiện có (`GiangVien`, `TaiKhoan`, `HocVien`, `MonHoc`, `KhoaHoc`, `KhoaHocMonHoc`, `PhongHoc`), kèm theo khóa chính, khóa ngoại, unique constraint, check constraint và index. Lưu ý: Đây là script khởi tạo database mới, không phải migration. Nếu database hoặc bảng đã tồn tại từ schema cũ thì việc chạy lại script không tự động đổi collation. Không tạo migration trong lượt này.
+1. **`001_schema.sql`** — Khởi tạo 7 bảng danh mục & xác thực (`GiangVien`, `TaiKhoan`, `HocVien`, `MonHoc`, `KhoaHoc`, `KhoaHocMonHoc`, `PhongHoc`), kèm theo khóa chính, khóa ngoại, unique constraint, check constraint và index.
 2. **`002_seed.sql`** — Nạp dữ liệu mẫu idempotent cho 6 danh mục và 6 tài khoản demo: 5 vai trò hoạt động và 1 tài khoản bị khóa (`ADMIN`, `DAOTAO`, `THUNGAN`, `GIANGVIEN`, `QUANLY`, `bikhoa`). Mật khẩu được lưu dưới dạng băm PBKDF2-SHA256 tương thích với `Pbkdf2PasswordHasher`.
+3. **`003_operations_schema.sql`** — Khởi tạo 5 bảng nghiệp vụ vận hành (`LopHoc`, `DangKyLopHoc`, `LichHoc`, `KetQuaHocTap`, `PhieuThu`), ràng buộc toàn vẹn, index hiệu năng cao.
+4. **`004_operations_seed.sql`** — Nạp dữ liệu mẫu hoạt động đào tạo, các lớp học đang mở, lịch học giảng dạy, phân công giảng viên, điểm thi và các giao dịch đóng học phí.
+5. **`005_operations_hardening.sql`** — Bổ sung cột kiểm toán hủy phiếu thu (`NgayHuy`, `NguoiHuyTaiKhoanId`), ràng buộc khóa ngoại tới `TaiKhoan`, cùng các index tăng tốc kiểm tra tranh chấp lịch học và đồng thời.
+6. **`006_student_profile_and_class_advisor.sql`** — Mở rộng hồ sơ học viên trong `dbo.HocVien` (11 trường: `SoDinhDanh`, `NgayCapGiayTo`, `NoiCapGiayTo`, `HoTenNguoiGiamHo`, `DienThoaiNguoiGiamHo`, `QuanHeNguoiGiamHo`, `NhanVienPhuTrachTaiKhoanId`, `NguonTuyenSinh`, `NgheNghiep`, `DonViCongTac`, `GhiChuDacBiet`), filtered unique index trên `SoDinhDanh`, và bổ sung `GiangVienChuNhiemId` cho `dbo.LopHoc` kèm backfill tự động từ lịch dạy sớm nhất.
+7. **`007_unicode_data_repair.sql`** — Sửa chữa triệt để lỗi mã hóa tiếng Việt (mojibake) trên toàn bộ dữ liệu nghiệp vụ `LopHoc`, `DangKyLopHoc`, `LichHoc`, `KetQuaHocTap`, `PhieuThu`. Script được mã hóa UTF-8 with BOM (`utf-8-bom`), sử dụng điều kiện kết hợp mã nghiệp vụ cụ thể và collation nhị phân chính xác (`COLLATE Latin1_General_BIN`), loại bỏ hoàn toàn các pattern wildcard rộng để không bao giờ ghi đè dữ liệu tiếng Việt hợp lệ và đảm bảo tính lũy thừa (idempotency).
 
 Ví dụ chạy bằng `sqlcmd` với Windows Authentication:
 
 ```powershell
-sqlcmd -S .\SQLEXPRESS -d QLHV -E -i database\001_schema.sql -b
-sqlcmd -S .\SQLEXPRESS -d QLHV -E -i database\002_seed.sql -b
+sqlcmd -S .\SQLEXPRESS -d QLHV -E -C -i database\001_schema.sql -b
+sqlcmd -S .\SQLEXPRESS -d QLHV -E -C -i database\002_seed.sql -b
+sqlcmd -S .\SQLEXPRESS -d QLHV -E -C -i database\003_operations_schema.sql -b
+sqlcmd -S .\SQLEXPRESS -d QLHV -E -C -i database\004_operations_seed.sql -b
+sqlcmd -S .\SQLEXPRESS -d QLHV -E -C -i database\005_operations_hardening.sql -b
+sqlcmd -S .\SQLEXPRESS -d QLHV -E -C -i database\006_student_profile_and_class_advisor.sql -b
+sqlcmd -S .\SQLEXPRESS -d QLHV -E -C -i database\007_unicode_data_repair.sql -b
 ```
 
 ---
@@ -54,10 +64,13 @@ Chạy truy vấn kiểm tra nhanh trên database `QLHV`:
 USE QLHV;
 GO
 
--- 1. Kiểm tra danh sách 7 bảng đã tạo
+-- 1. Kiểm tra danh sách 12 bảng đã tạo
 SELECT name AS TableName
 FROM sys.tables
-WHERE name IN (N'GiangVien', N'TaiKhoan', N'HocVien', N'MonHoc', N'KhoaHoc', N'KhoaHocMonHoc', N'PhongHoc')
+WHERE name IN (
+    N'GiangVien', N'TaiKhoan', N'HocVien', N'MonHoc', N'KhoaHoc', N'KhoaHocMonHoc', N'PhongHoc',
+    N'LopHoc', N'DangKyLopHoc', N'LichHoc', N'KetQuaHocTap', N'PhieuThu'
+)
 ORDER BY name;
 
 -- 2. Kiểm tra số lượng bản ghi seed trong từng bảng
@@ -73,7 +86,17 @@ SELECT N'KhoaHoc', COUNT(*) FROM dbo.KhoaHoc
 UNION ALL
 SELECT N'KhoaHocMonHoc', COUNT(*) FROM dbo.KhoaHocMonHoc
 UNION ALL
-SELECT N'PhongHoc', COUNT(*) FROM dbo.PhongHoc;
+SELECT N'PhongHoc', COUNT(*) FROM dbo.PhongHoc
+UNION ALL
+SELECT N'LopHoc', COUNT(*) FROM dbo.LopHoc
+UNION ALL
+SELECT N'DangKyLopHoc', COUNT(*) FROM dbo.DangKyLopHoc
+UNION ALL
+SELECT N'LichHoc', COUNT(*) FROM dbo.LichHoc
+UNION ALL
+SELECT N'KetQuaHocTap', COUNT(*) FROM dbo.KetQuaHocTap
+UNION ALL
+SELECT N'PhieuThu', COUNT(*) FROM dbo.PhieuThu;
 
 -- 3. Kiểm tra danh sách 6 tài khoản theo vai trò
 SELECT Id, TenDangNhap, VaiTro, GiangVienId, TrangThai
@@ -117,12 +140,21 @@ END;
 GO
 ```
 
-Sau đó chạy `001_schema.sql` và `002_seed.sql` vào `QLHV_Test`:
+Sau đó chạy toàn bộ 7 script vào `QLHV_Test`:
 
 ```powershell
-sqlcmd -S .\SQLEXPRESS -d QLHV_Test -E -i database\001_schema.sql -b
-sqlcmd -S .\SQLEXPRESS -d QLHV_Test -E -i database\002_seed.sql -b
+sqlcmd -S .\SQLEXPRESS -d QLHV_Test -E -C -i database\001_schema.sql -b
+sqlcmd -S .\SQLEXPRESS -d QLHV_Test -E -C -i database\002_seed.sql -b
+sqlcmd -S .\SQLEXPRESS -d QLHV_Test -E -C -i database\003_operations_schema.sql -b
+sqlcmd -S .\SQLEXPRESS -d QLHV_Test -E -C -i database\004_operations_seed.sql -b
+sqlcmd -S .\SQLEXPRESS -d QLHV_Test -E -C -i database\005_operations_hardening.sql -b
+sqlcmd -S .\SQLEXPRESS -d QLHV_Test -E -C -i database\006_student_profile_and_class_advisor.sql -b
+sqlcmd -S .\SQLEXPRESS -d QLHV_Test -E -C -i database\007_unicode_data_repair.sql -b
 ```
+
+> [!NOTE]
+> **Lưu ý kiến trúc về `dbo.LopHoc.GiangVienChuNhiemId`:**
+> Tại tầng CSDL SQL Server, cột `GiangVienChuNhiemId` được thiết kế kiểu `INT NULL` (cho phép NULL) nhằm đảm bảo tính tương thích ngược với các bản ghi lớp học cũ trước khi chạy migration và tạo thuận lợi cho việc backfill dữ liệu. Tuy nhiên, tại tầng nghiệp vụ (`LopHocService`), hệ thống áp dụng quy tắc nghiệp vụ nghiêm ngặt bắt buộc mọi thao tác tạo mới hoặc cập nhật lớp học đều phải có Giảng viên chủ nhiệm đang hoạt động (`TrangThai = DangHoatDong`), từ chối lưu và trả về mã lỗi nếu thiếu hoặc giảng viên không hợp lệ.
 
 ---
 

@@ -34,9 +34,9 @@ partial class FrmMonHocEdit
         ((System.ComponentModel.ISupportInitialize)nudSoBuoi).BeginInit();
         ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
         SuspendLayout();
-        // 
+        //
         // lblTitle
-        // 
+        //
         lblTitle.AutoSize = true;
         lblTitle.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point);
         lblTitle.ForeColor = Color.FromArgb(30, 64, 175);
@@ -45,9 +45,9 @@ partial class FrmMonHocEdit
         lblTitle.Size = new Size(207, 25);
         lblTitle.TabIndex = 0;
         lblTitle.Text = "THÔNG TIN MÔN HỌC";
-        // 
+        //
         // lblMaMonHoc
-        // 
+        //
         lblMaMonHoc.AutoSize = true;
         lblMaMonHoc.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point);
         lblMaMonHoc.Location = new Point(25, 65);
@@ -55,16 +55,16 @@ partial class FrmMonHocEdit
         lblMaMonHoc.Size = new Size(115, 17);
         lblMaMonHoc.TabIndex = 1;
         lblMaMonHoc.Text = "Mã môn học (*):";
-        // 
+        //
         // txtMaMonHoc
-        // 
+        //
         txtMaMonHoc.Location = new Point(25, 88);
         txtMaMonHoc.Name = "txtMaMonHoc";
         txtMaMonHoc.Size = new Size(220, 23);
         txtMaMonHoc.TabIndex = 2;
-        // 
+        //
         // lblTenMonHoc
-        // 
+        //
         lblTenMonHoc.AutoSize = true;
         lblTenMonHoc.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point);
         lblTenMonHoc.Location = new Point(265, 65);
@@ -72,16 +72,16 @@ partial class FrmMonHocEdit
         lblTenMonHoc.Size = new Size(118, 17);
         lblTenMonHoc.TabIndex = 3;
         lblTenMonHoc.Text = "Tên môn học (*):";
-        // 
+        //
         // txtTenMonHoc
-        // 
+        //
         txtTenMonHoc.Location = new Point(265, 88);
         txtTenMonHoc.Name = "txtTenMonHoc";
         txtTenMonHoc.Size = new Size(250, 23);
         txtTenMonHoc.TabIndex = 4;
-        // 
+        //
         // lblSoBuoi
-        // 
+        //
         lblSoBuoi.AutoSize = true;
         lblSoBuoi.Font = new Font("Segoe UI", 9.5F, FontStyle.Regular, GraphicsUnit.Point);
         lblSoBuoi.Location = new Point(25, 125);
@@ -89,9 +89,9 @@ partial class FrmMonHocEdit
         lblSoBuoi.Size = new Size(139, 17);
         lblSoBuoi.TabIndex = 5;
         lblSoBuoi.Text = "Số buổi mặc định (*):";
-        // 
+        //
         // nudSoBuoi
-        // 
+        //
         nudSoBuoi.Location = new Point(25, 148);
         nudSoBuoi.Maximum = new decimal(new int[] { 300, 0, 0, 0 });
         nudSoBuoi.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
@@ -99,9 +99,9 @@ partial class FrmMonHocEdit
         nudSoBuoi.Size = new Size(220, 23);
         nudSoBuoi.TabIndex = 6;
         nudSoBuoi.Value = new decimal(new int[] { 15, 0, 0, 0 });
-        // 
+        //
         // lblMoTa
-        // 
+        //
         lblMoTa.AutoSize = true;
         lblMoTa.Font = new Font("Segoe UI", 9.5F, FontStyle.Regular, GraphicsUnit.Point);
         lblMoTa.Location = new Point(25, 185);
@@ -109,17 +109,17 @@ partial class FrmMonHocEdit
         lblMoTa.Size = new Size(46, 17);
         lblMoTa.TabIndex = 7;
         lblMoTa.Text = "Mô tả:";
-        // 
+        //
         // txtMoTa
-        // 
+        //
         txtMoTa.Location = new Point(25, 208);
         txtMoTa.Multiline = true;
         txtMoTa.Name = "txtMoTa";
         txtMoTa.Size = new Size(490, 60);
         txtMoTa.TabIndex = 8;
-        // 
+        //
         // lblTrangThai
-        // 
+        //
         lblTrangThai.AutoSize = true;
         lblTrangThai.Font = new Font("Segoe UI", 9.5F, FontStyle.Regular, GraphicsUnit.Point);
         lblTrangThai.Location = new Point(265, 125);
@@ -127,18 +127,18 @@ partial class FrmMonHocEdit
         lblTrangThai.Size = new Size(69, 17);
         lblTrangThai.TabIndex = 9;
         lblTrangThai.Text = "Trạng thái:";
-        // 
+        //
         // cboTrangThai
-        // 
+        //
         cboTrangThai.DropDownStyle = ComboBoxStyle.DropDownList;
         cboTrangThai.FormattingEnabled = true;
         cboTrangThai.Location = new Point(265, 148);
         cboTrangThai.Name = "cboTrangThai";
         cboTrangThai.Size = new Size(250, 23);
         cboTrangThai.TabIndex = 10;
-        // 
+        //
         // btnSave
-        // 
+        //
         btnSave.BackColor = Color.FromArgb(30, 64, 175);
         btnSave.Cursor = Cursors.Hand;
         btnSave.FlatAppearance.BorderSize = 0;
@@ -152,9 +152,9 @@ partial class FrmMonHocEdit
         btnSave.Text = "Lưu lại";
         btnSave.UseVisualStyleBackColor = false;
         btnSave.Click += btnSave_Click;
-        // 
+        //
         // btnCancel
-        // 
+        //
         btnCancel.BackColor = Color.FromArgb(229, 231, 235);
         btnCancel.Cursor = Cursors.Hand;
         btnCancel.FlatAppearance.BorderSize = 0;
@@ -168,22 +168,22 @@ partial class FrmMonHocEdit
         btnCancel.Text = "Hủy bỏ";
         btnCancel.UseVisualStyleBackColor = false;
         btnCancel.Click += btnCancel_Click;
-        // 
+        //
         // errorProvider
-        // 
+        //
         errorProvider.BlinkStyle = ErrorBlinkStyle.NeverBlink;
         errorProvider.ContainerControl = this;
-        // 
+        //
         // lblError
-        // 
+        //
         lblError.ForeColor = Color.FromArgb(220, 38, 38);
         lblError.Location = new Point(25, 280);
         lblError.Name = "lblError";
         lblError.Size = new Size(490, 20);
         lblError.TabIndex = 13;
-        // 
+        //
         // FrmMonHocEdit
-        // 
+        //
         AcceptButton = btnSave;
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;

@@ -17,6 +17,36 @@ public class HocVienDto
     public string? DiaChi { get; set; }
     public DateTime NgayDangKy { get; set; } = DateTime.Today;
     public TrangThaiHoatDong TrangThai { get; set; } = TrangThaiHoatDong.DangHoatDong;
+
+    // Các trường mở rộng hồ sơ học viên (STUDENT-PROFILE-AND-TRAINING-UI-05)
+    public string? SoDinhDanh { get; set; }
+    public DateTime? NgayCapGiayTo { get; set; }
+    public string? NoiCapGiayTo { get; set; }
+    public string? HoTenNguoiGiamHo { get; set; }
+    public string? DienThoaiNguoiGiamHo { get; set; }
+    public string? QuanHeNguoiGiamHo { get; set; }
+    public int? NhanVienPhuTrachTaiKhoanId { get; set; }
+    public string? TenNhanVienPhuTrach { get; set; } // Hiển thị: TenDangNhap (VaiTro)
+    public string? NguonTuyenSinh { get; set; }
+    public string? NgheNghiep { get; set; }
+    public string? DonViCongTac { get; set; }
+    public string? GhiChuDacBiet { get; set; }
+
+    /// <summary>
+    /// Số định danh được che giấu bớt (ví dụ: ********1234) khi hiển thị trên danh sách công cộng
+    /// </summary>
+    public string SoDinhDanhMasked => MaskSoDinhDanh(SoDinhDanh);
+
+    /// <summary>
+    /// Hàm che số định danh chuẩn hóa toàn hệ thống (chỉ hiển thị 4 số cuối)
+    /// </summary>
+    public static string MaskSoDinhDanh(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw)) return string.Empty;
+        var clean = raw.Trim();
+        if (clean.Length <= 4) return new string('*', clean.Length);
+        return new string('*', clean.Length - 4) + clean[^4..];
+    }
 }
 
 /// <summary>

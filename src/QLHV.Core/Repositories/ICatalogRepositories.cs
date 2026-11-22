@@ -7,6 +7,7 @@ public interface IHocVienRepository
     Task<IReadOnlyList<HocVienDto>> GetAllAsync(HocVienFilter? filter = null);
     Task<HocVienDto?> GetByIdAsync(int id);
     Task<HocVienDto?> GetByMaHocVienAsync(string maHocVien);
+    Task<HocVienDto?> GetBySoDinhDanhAsync(string soDinhDanh);
     Task<HocVienDto> AddAsync(HocVienDto dto);
     Task<bool> UpdateAsync(HocVienDto dto);
     Task<bool> SetTrangThaiAsync(int id, Contracts.Enums.TrangThaiHoatDong trangThai);

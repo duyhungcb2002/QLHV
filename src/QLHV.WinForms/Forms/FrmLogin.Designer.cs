@@ -31,9 +31,9 @@ partial class FrmLogin
         pnlHeader.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
         SuspendLayout();
-        // 
+        //
         // pnlHeader
-        // 
+        //
         pnlHeader.BackColor = Color.FromArgb(30, 64, 175);
         pnlHeader.Controls.Add(lblSubtitle);
         pnlHeader.Controls.Add(lblTitle);
@@ -42,9 +42,9 @@ partial class FrmLogin
         pnlHeader.Name = "pnlHeader";
         pnlHeader.Size = new Size(420, 80);
         pnlHeader.TabIndex = 0;
-        // 
+        //
         // lblSubtitle
-        // 
+        //
         lblSubtitle.AutoSize = true;
         lblSubtitle.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
         lblSubtitle.ForeColor = Color.FromArgb(219, 234, 254);
@@ -53,9 +53,9 @@ partial class FrmLogin
         lblSubtitle.Size = new Size(160, 15);
         lblSubtitle.TabIndex = 1;
         lblSubtitle.Text = "Hệ thống Quản lý học viên";
-        // 
+        //
         // lblTitle
-        // 
+        //
         lblTitle.AutoSize = true;
         lblTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold, GraphicsUnit.Point);
         lblTitle.ForeColor = Color.White;
@@ -64,9 +64,9 @@ partial class FrmLogin
         lblTitle.Size = new Size(220, 25);
         lblTitle.TabIndex = 0;
         lblTitle.Text = "ĐĂNG NHẬP HỆ THỐNG";
-        // 
+        //
         // lblUsername
-        // 
+        //
         lblUsername.AutoSize = true;
         lblUsername.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point);
         lblUsername.Location = new Point(40, 105);
@@ -74,17 +74,17 @@ partial class FrmLogin
         lblUsername.Size = new Size(104, 17);
         lblUsername.TabIndex = 1;
         lblUsername.Text = "Tên đăng nhập:";
-        // 
+        //
         // txtUsername
-        // 
+        //
         txtUsername.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
         txtUsername.Location = new Point(40, 128);
         txtUsername.Name = "txtUsername";
         txtUsername.Size = new Size(340, 25);
         txtUsername.TabIndex = 2;
-        // 
+        //
         // lblPassword
-        // 
+        //
         lblPassword.AutoSize = true;
         lblPassword.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point);
         lblPassword.Location = new Point(40, 168);
@@ -92,18 +92,18 @@ partial class FrmLogin
         lblPassword.Size = new Size(70, 17);
         lblPassword.TabIndex = 3;
         lblPassword.Text = "Mật khẩu:";
-        // 
+        //
         // txtPassword
-        // 
+        //
         txtPassword.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
         txtPassword.Location = new Point(40, 191);
         txtPassword.Name = "txtPassword";
         txtPassword.Size = new Size(340, 25);
         txtPassword.TabIndex = 4;
         txtPassword.UseSystemPasswordChar = true;
-        // 
+        //
         // btnLogin
-        // 
+        //
         btnLogin.BackColor = Color.FromArgb(30, 64, 175);
         btnLogin.Cursor = Cursors.Hand;
         btnLogin.FlatAppearance.BorderSize = 0;
@@ -117,9 +117,9 @@ partial class FrmLogin
         btnLogin.Text = "Đăng nhập";
         btnLogin.UseVisualStyleBackColor = false;
         btnLogin.Click += btnLogin_Click;
-        // 
+        //
         // btnExit
-        // 
+        //
         btnExit.BackColor = Color.FromArgb(229, 231, 235);
         btnExit.Cursor = Cursors.Hand;
         btnExit.FlatAppearance.BorderSize = 0;
@@ -133,9 +133,9 @@ partial class FrmLogin
         btnExit.Text = "Thoát";
         btnExit.UseVisualStyleBackColor = false;
         btnExit.Click += btnExit_Click;
-        // 
+        //
         // lblError
-        // 
+        //
         lblError.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
         lblError.ForeColor = Color.FromArgb(220, 38, 38);
         lblError.Location = new Point(40, 290);
@@ -143,14 +143,14 @@ partial class FrmLogin
         lblError.Size = new Size(340, 40);
         lblError.TabIndex = 7;
         lblError.TextAlign = ContentAlignment.MiddleCenter;
-        // 
+        //
         // errorProvider
-        // 
+        //
         errorProvider.BlinkStyle = ErrorBlinkStyle.NeverBlink;
         errorProvider.ContainerControl = this;
-        // 
+        //
         // lblDemoHint
-        // 
+        //
         lblDemoHint.AutoSize = true;
         lblDemoHint.Font = new Font("Segoe UI", 8F, FontStyle.Italic, GraphicsUnit.Point);
         lblDemoHint.ForeColor = Color.FromArgb(107, 114, 128);
@@ -159,9 +159,9 @@ partial class FrmLogin
         lblDemoHint.Size = new Size(236, 13);
         lblDemoHint.TabIndex = 8;
         lblDemoHint.Text = "Tài khoản mẫu: admin / Admin@123 (Xem README)";
-        // 
+        //
         // FrmLogin
-        // 
+        //
         AcceptButton = btnLogin;
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;

@@ -26,6 +26,7 @@ public class ServiceAuthorizationTests
     private ICurrentUserService _currentUserService = null!;
 
     private FakeHocVienRepository _hocVienRepo = null!;
+    private FakeTaiKhoanRepository _taiKhoanRepo = null!;
     private HocVienService _hocVienService = null!;
 
     private FakeGiangVienRepository _giangVienRepo = null!;
@@ -51,7 +52,8 @@ public class ServiceAuthorizationTests
         _currentUserService = new CurrentUserService(_authzService);
 
         _hocVienRepo = new FakeHocVienRepository();
-        _hocVienService = new HocVienService(_hocVienRepo, _currentUserService, _logger);
+        _taiKhoanRepo = new FakeTaiKhoanRepository(new Pbkdf2PasswordHasher());
+        _hocVienService = new HocVienService(_hocVienRepo, _currentUserService, _logger, _taiKhoanRepo);
 
         _giangVienRepo = new FakeGiangVienRepository();
         _giangVienService = new GiangVienService(_giangVienRepo, _currentUserService, _logger);
@@ -568,6 +570,46 @@ public class ServiceAuthorizationTests
 
         var removeResDt = await _khoaHocMonHocService.RemoveMonHocAsync(1, newMhRes.Data.Id);
         Assert.IsTrue(removeResDt.IsSuccess);
+    }
+
+    #endregion
+
+    #region CCCD Protection Tests
+
+    [TestMethod]
+    public async Task HocVienService_CatalogManage_Receives_Full_CCCD()
+    {
+        SetUser(VaiTro.ADMIN);
+        var res = await _hocVienService.GetByIdAsync(1);
+        Assert.IsTrue(res.IsSuccess);
+        Assert.IsNotNull(res.Data);
+        Assert.AreEqual("001203001234", res.Data.SoDinhDanh);
+        Assert.AreEqual("********1234", res.Data.SoDinhDanhMasked);
+
+        var allRes = await _hocVienService.GetAllAsync();
+        Assert.IsTrue(allRes.IsSuccess);
+        var hv1 = allRes.Data!.FirstOrDefault(x => x.Id == 1);
+        Assert.IsNotNull(hv1);
+        Assert.AreEqual("001203001234", hv1.SoDinhDanh);
+    }
+
+    [TestMethod]
+    public async Task HocVienService_CatalogViewOnly_Receives_Masked_CCCD()
+    {
+        SetUser(VaiTro.THUNGAN);
+        var res = await _hocVienService.GetByIdAsync(1);
+        Assert.IsTrue(res.IsSuccess);
+        Assert.IsNotNull(res.Data);
+        Assert.AreEqual("********1234", res.Data.SoDinhDanh);
+        Assert.AreEqual("********1234", res.Data.SoDinhDanhMasked);
+        Assert.DoesNotContain("00120300", res.Data.SoDinhDanh!, "Raw CCCD must not be exposed in memory to view-only roles.");
+
+        var allRes = await _hocVienService.GetAllAsync();
+        Assert.IsTrue(allRes.IsSuccess);
+        var hv1 = allRes.Data!.FirstOrDefault(x => x.Id == 1);
+        Assert.IsNotNull(hv1);
+        Assert.AreEqual("********1234", hv1.SoDinhDanh);
+        Assert.DoesNotContain("00120300", hv1.SoDinhDanh!);
     }
 
     #endregion

@@ -1,24 +1,37 @@
 # Ghi Chú Tích Hợp Kỹ Thuật (Integration Notes)
 
-Tài liệu này hướng dẫn chi tiết cách các thành viên khác tích hợp phần việc của mình vào kiến trúc chuẩn do Duy Hưng xây dựng.
+Tài liệu này ghi nhận hiện trạng tích hợp toàn diện của hệ thống QLHV sau khi hoàn thành giai đoạn **Mega MVP** và **Student Profile & Training UI 05 (`STUDENT-PROFILE-AND-TRAINING-UI-05`)**.
 
 ---
 
-## 1. Dành cho Chu Đức (Database & ADO.NET Repositories)
+## 1. Trạng thái phân hệ Đào tạo, Hồ sơ học viên & Báo cáo
 
-### 1.1. Hiện trạng kiến trúc (Sau giai đoạn `SQL-01B1 + SQL-01B2`)
-- **`SEC-01` đã hoàn thành**: Bảo vệ tính bất biến của ma trận quyền và toàn vẹn phiên đăng nhập.
-- **`SQL-01A` đã hoàn thành**: Hạ tầng `SqlConnectionFactory`, schema `001_schema.sql`, seed `002_seed.sql`.
-- **`SQL-01B1` đã hoàn thành**:
-  - Triển khai đầy đủ 7 SQL Repositories ADO.NET (`SqlTaiKhoanRepository`, `SqlHocVienRepository`, `SqlGiangVienRepository`, `SqlMonHocRepository`, `SqlKhoaHocRepository`, `SqlKhoaHocMonHocRepository`, `SqlPhongHocRepository`).
-  - Đồng bộ validation độ dài tối đa tại Service với schema SQL.
-  - Bộ kiểm thử tích hợp (SQL Integration Tests) 10/10 passed trên database `QLHV_Test`.
-- **`SQL-01B2` (Kết nối WinForms & Cấu hình an toàn)**:
-  - **SQL-01B2 implementation**: **DONE** (Nối toàn diện WinForms với SQL Server thật `QLHV`, `AppConfigLoader` đa nguồn, `StartupConnectionTester` chặn `QLHV_Test`, badge môi trường bắt buộc, làm sạch log toàn diện).
-  - **Automated tests**: **DONE** (103/103 tests passed, gồm 10 bài test SQL Server integration độc lập trên `QLHV_Test`, các test cấu hình đa chế độ và kiểm tra lọc log bảo mật).
-  - **Manual WinForms UAT**: **PENDING USER VERIFICATION** (Chờ người dùng mở ứng dụng trên môi trường desktop thực tế để xác nhận trải nghiệm người dùng).
+Toàn bộ các phân hệ đã được triển khai hoàn chỉnh và kết nối thông suốt:
+- **`QLHV.Features.Catalog` & `HocVienService`**:
+  - Mở rộng hồ sơ học viên với 11 trường thông tin mới (`SoDinhDanh`, `NgayCapGiayTo`, `NoiCapGiayTo`, `HoTenNguoiGiamHo`, `DienThoaiNguoiGiamHo`, `QuanHeNguoiGiamHo`, `NhanVienPhuTrachTaiKhoanId`, `NguonTuyenSinh`, `NgheNghiep`, `DonViCongTac`, `GhiChuDacBiet`).
+  - Validation chặt chẽ tầng nghiệp vụ: Kiểm tra độ dài, số định danh CCCD/CMND đúng 9 hoặc 12 chữ số, chống trùng lặp (kết hợp filtered unique index), bộ giấy tờ đi liền nhau và ngày cấp không được ở tương lai, người giám hộ bắt buộc khi học viên dưới 18 tuổi, nhân viên phụ trách phải là tài khoản hoạt động thuộc nhóm ADMIN hoặc DAOTAO, nguồn tuyển sinh thuộc danh mục chuẩn.
+- **`QLHV.Features.Training`**: Triển khai các Services nghiệp vụ đào tạo:
+  - `LopHocService`: Mở lớp, cập nhật thông tin lớp, kiểm tra giới hạn sĩ số (1 - 200), bắt buộc có Giảng viên chủ nhiệm (`GiangVienChuNhiemId`) đang hoạt động.
+  - `DangKyLopHocService`: Xếp học viên vào lớp, lưu vết snapshot học phí tại thời điểm ghi danh, kiểm tra sĩ số tối đa và chống ghi danh trùng.
+  - `LichHocService`: Lập lịch học, tự động kiểm tra xung đột trùng phòng và trùng giảng viên theo công thức giao thoa thời gian.
+  - `KetQuaHocTapService`: Quản lý điểm tổng kết môn học, xếp loại Đạt/Không đạt (ngưỡng 5.00), hỗ trợ xóa điểm (blank cell), kiểm tra phân công giảng viên.
+  - `HocPhiService`: Quản lý công nợ, lập phiếu thu thanh toán từng phần/toàn phần, ngăn chặn nộp thừa, hủy phiếu thu an toàn (Soft Cancel kèm lý do).
+  - `BaoCaoService`: Thống kê tổng hợp theo 5 chuyên đề: Học viên theo lớp, Lịch học theo lớp, Phân công giảng dạy theo giảng viên, Kết quả học tập & Tỷ lệ đạt môn học, Công nợ học phí theo lớp.
+- **Hạ tầng SQL Server ADO.NET (`QLHV.Infrastructure.SqlServer`)**: Triển khai 13 SQL Repositories hoàn chỉnh kết hợp script migration `006_student_profile_and_class_advisor.sql` và `007_unicode_data_repair.sql`.
+- **Giao diện người dùng WinForms**:
+  - `FrmHocVien`: Che mờ số CCCD/CMND (`SoDinhDanhMasked`), bổ sung nút "Xem chi tiết" gọi `FrmHocVienDetail`.
+  - `FrmHocVienEdit`: Thiết kế hiện đại 5 tab (Thông tin cơ bản, Giấy tờ tùy thân, Người giám hộ, Nghề nghiệp & Tuyển sinh, Ghi chú), đếm ký tự ghi chú thời gian thực.
+  - `FrmHocVienDetail`: Xem đầy đủ hồ sơ học viên, xem/ẩn số định danh và lịch sử đào tạo (tra cứu qua `DangKyLopHoc`, lớp học, khóa học, học phí snapshot, công nợ).
+  - `FrmDaoTao`: Chuẩn hóa 3 DataGridView (`dgvLopHoc`, `dgvDangKy`, `dgvLichHoc`), `AutoGenerateColumns = false`, tiêu đề tiếng Việt chuẩn, định dạng ngày tháng và tiền tệ chuẩn.
+  - `FrmLopHocEdit`: Bổ sung chọn Giảng viên chủ nhiệm từ danh sách giảng viên đang hoạt động.
+  - `FrmDiem`: Ghi nhận bảng điểm trực quan trên DataGridView.
+  - `FrmHocPhi` & `FrmThuHocPhi`: Quản lý công nợ, lập phiếu và hủy phiếu thu.
+  - `FrmBaoCao`: 5 Tab báo cáo tổng hợp.
+  - `FrmMain`: Đã nối toàn bộ các nút điều hướng chính thức, gỡ bỏ toàn bộ placeholder.
 
-### 1.2. Hướng dẫn cấu hình kết nối SQL Server
+---
+
+## 2. Hướng dẫn cấu hình kết nối SQL Server
 - File cấu hình chính: `src/QLHV.WinForms/appsettings.json`.
 - File ghi đè cục bộ (không commit): `src/QLHV.WinForms/appsettings.Local.json`.
 - Cấu hình mẫu:
@@ -30,30 +43,9 @@ Tài liệu này hướng dẫn chi tiết cách các thành viên khác tích h
     }
   }
   ```
-- Biến môi trường (nếu muốn ghi đè qua CI/CD):
+- Biến môi trường:
   - `QLHV_DATA_PROVIDER`: `SqlServer` hoặc `Fake`.
   - `QLHV_CONNECTION_STRING`: Chuỗi kết nối tới SQL Server.
-
----
-
-## 2. Dành cho Bá Hiệp (Module Training & Quản lý đào tạo)
-
-### 2.1. Hiện trạng phân quyền và Menu
-- Trên Form chính (`FrmMain`), các mục:
-  - **Đào tạo - Lớp học**: Yêu cầu quyền `Permission.TrainingView` / `TrainingManage`.
-  - **Điểm**: Yêu cầu quyền `Permission.GradeEntry`.
-  - **Học phí & Thu chi**: Yêu cầu quyền `Permission.TuitionManage`.
-- Các menu này hiện đang được hiển thị ở trạng thái `[Đang chờ tích hợp]` và hiển thị thông báo thân thiện khi click.
-
-### 2.2. Hướng dẫn tích hợp Form nghiệp vụ
-1. **Tạo Project**: `QLHV.Features.Training`.
-2. **Tham chiếu**: Tham chiếu đến `QLHV.Contracts` và `QLHV.Core`.
-3. **Tận dụng Core**:
-   - Sử dụng `OperationResult<T>` cho mọi kết quả trả về của Service.
-   - Sử dụng `ICurrentUserService` để biết ai đang thao tác và kiểm tra quyền.
-   - Sử dụng `IAppLogger` để ghi log lỗi thống nhất.
-4. **Gắn vào Menu**:
-   - Trong `FrmMain`, thay thế sự kiện click của các nút placeholder bằng việc nạp Form nghiệp vụ của Bá Hiệp vào vùng `pnlContent`.
 
 ---
 
@@ -66,6 +58,20 @@ Tài liệu này hướng dẫn chi tiết cách các thành viên khác tích h
 | **DH-03** | Đăng nhập, xác thực, phân quyền ma trận, Form chính và điều hướng | Duy Hưng | **DONE** |
 | **DH-04** | CRUD Học viên, Giảng viên (Validation, UI, Fake Service) | Duy Hưng | **DONE** |
 | **DH-05** | CRUD Môn học, Khóa học, Khóa-Môn, Phòng học | Duy Hưng | **DONE** |
-| **DH-06** | Ổn định service dùng chung và tích hợp module thành viên khác | Nhóm | **PENDING INTEGRATION** (Chờ module của Bá Hiệp) |
+| **DH-06** | Ổn định service dùng chung và tích hợp module thành viên khác | Nhóm | **DONE** (Đã tích hợp xong toàn bộ Training, Điểm, Học phí, Báo cáo) |
 | **DH-07** | Kiểm tra quyền ở service, chuẩn hóa lỗi/logging, lọc dữ liệu nhạy cảm và tích hợp SQL Server | Duy Hưng | **DONE** |
-| **DH-08** | Đóng gói, cấu hình đa chế độ (SQL/Fake), release và kiểm thử máy sạch | Duy Hưng | **PARTIAL** (Đã hoàn thiện cấu hình SQL/Fake, chờ module hoàn thiện để đóng gói) |
+| **DH-08** | Đóng gói, cấu hình đa chế độ (SQL/Fake), release và kiểm thử máy sạch | Duy Hưng | **DONE** (Kiểm tra publish win-x64 Release thành công) |
+
+---
+
+## 4. Kết quả kiểm thử và nghiệm thu tự động (Testing Metrics)
+
+- **Tổng số bài kiểm thử:** **164/164 passed** (100% Passed, 0 Failed, 0 Skipped).
+  - **Non-SQL Unit & Smoke Tests:** 138/138 passed.
+  - **SQL Server Integration Tests:** 26/26 passed (thực thi trên cơ sở dữ liệu kiểm thử `QLHV_Test`).
+- **Lưu ý kiến trúc `dbo.LopHoc.GiangVienChuNhiemId`:** Tại tầng CSDL SQL Server, cột `GiangVienChuNhiemId` được định nghĩa cho phép `NULL` nhằm tương thích ngược với dữ liệu cũ và hỗ trợ kịch bản migration. Tuy nhiên, tại tầng nghiệp vụ (`LopHocService`), hệ thống bắt buộc lớp học phải có Giảng viên chủ nhiệm đang hoạt động khi thêm mới hoặc cập nhật.
+- **Bảo mật CCCD tầng Service:** Mặt nạ định dạng chuẩn `********1234` (giữ 4 chữ số cuối), DTO trả về tầng giao diện đã được che đối với các tài khoản không có quyền `CatalogManage` (chỉ quyền `CatalogManage` mới được xem số đầy đủ).
+- **Hợp đồng dữ liệu Khóa học (Course Contract):** Hoàn thiện ánh xạ `KhoaHocId` và `TenKhoaHoc` xuyên suốt các repository ADO.NET và Fake Store (`DangKyLopHoc`, `PhieuThu`, `KetQuaHocTap`).
+- **Khởi động an toàn & Kiểm tra cấu trúc migration 006:** `StartupConnectionTester` kiểm tra 11 cột hồ sơ mở rộng của `dbo.HocVien`, cột `GiangVienChuNhiemId` của `dbo.LopHoc`, filtered unique index `UX_HocVien_SoDinhDanh` và 2 foreign keys.
+- **Migration 007 An toàn với UTF-8 BOM:** Sử dụng điều kiện collation nhị phân chính xác (`COLLATE Latin1_General_BIN`), loại bỏ hoàn toàn các pattern wildcard rộng để không bao giờ ghi đè dữ liệu tiếng Việt hợp lệ.
+- **Biên dịch sạch sẽ:** 0 cảnh báo compiler, 0 cảnh báo MSTest analyzer (chỉ ghi nhận NU1900 của NuGet Audit do máy chạy offline).

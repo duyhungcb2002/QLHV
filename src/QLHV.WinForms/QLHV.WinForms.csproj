@@ -4,6 +4,7 @@
     <ProjectReference Include="..\QLHV.Contracts\QLHV.Contracts.csproj" />
     <ProjectReference Include="..\QLHV.Core\QLHV.Core.csproj" />
     <ProjectReference Include="..\QLHV.Features.Catalog\QLHV.Features.Catalog.csproj" />
+    <ProjectReference Include="..\QLHV.Features.Training\QLHV.Features.Training.csproj" />
     <ProjectReference Include="..\QLHV.Infrastructure.SqlServer\QLHV.Infrastructure.SqlServer.csproj" />
   </ItemGroup>
 

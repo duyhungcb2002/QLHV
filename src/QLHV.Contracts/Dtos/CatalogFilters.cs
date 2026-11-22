@@ -9,6 +9,11 @@ public class HocVienFilter
 {
     public string? TuKhoa { get; set; }
     public TrangThaiHoatDong? TrangThai { get; set; }
+    public string? SoDinhDanh { get; set; }
+    public string? NguoiGiamHo { get; set; }
+    public string? DienThoaiNguoiGiamHo { get; set; }
+    public string? NguonTuyenSinh { get; set; }
+    public int? NhanVienPhuTrachTaiKhoanId { get; set; }
 }
 
 /// <summary>

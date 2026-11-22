@@ -37,4 +37,3 @@ internal static class SqlRepositoryHelper
         return sqlConnection;
     }
 }
-

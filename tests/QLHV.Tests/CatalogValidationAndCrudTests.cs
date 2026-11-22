@@ -18,6 +18,7 @@ public class CatalogValidationAndCrudTests
     private ICurrentUserService _currentUserService = null!;
 
     private FakeHocVienRepository _hocVienRepo = null!;
+    private FakeTaiKhoanRepository _taiKhoanRepo = null!;
     private HocVienService _hocVienService = null!;
 
     private FakeGiangVienRepository _giangVienRepo = null!;
@@ -49,7 +50,8 @@ public class CatalogValidationAndCrudTests
         });
 
         _hocVienRepo = new FakeHocVienRepository();
-        _hocVienService = new HocVienService(_hocVienRepo, _currentUserService, _logger);
+        _taiKhoanRepo = new FakeTaiKhoanRepository(new Pbkdf2PasswordHasher());
+        _hocVienService = new HocVienService(_hocVienRepo, _currentUserService, _logger, _taiKhoanRepo);
 
         _giangVienRepo = new FakeGiangVienRepository();
         _giangVienService = new GiangVienService(_giangVienRepo, _currentUserService, _logger);

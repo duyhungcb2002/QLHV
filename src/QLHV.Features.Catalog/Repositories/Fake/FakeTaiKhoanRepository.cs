@@ -49,6 +49,15 @@ public class FakeTaiKhoanRepository : ITaiKhoanRepository
         }
     }
 
+    public Task<TaiKhoanDto?> GetByIdAsync(int id)
+    {
+        lock (_lock)
+        {
+            var item = _taiKhoans.FirstOrDefault(x => x.Id == id);
+            return Task.FromResult(item != null ? Clone(item) : null);
+        }
+    }
+
     public Task<TaiKhoanDto?> GetByTenDangNhapAsync(string tenDangNhap)
     {
         lock (_lock)

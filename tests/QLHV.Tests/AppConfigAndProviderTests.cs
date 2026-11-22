@@ -413,4 +413,31 @@ public class AppConfigAndProviderTests
         Assert.IsFalse(result.IsSuccess);
         Assert.IsFalse(string.IsNullOrWhiteSpace(result.ErrorMessage));
     }
+
+    [TestMethod]
+    public void StartupConnectionTester_Migration006_Fails_When_Components_Missing()
+    {
+        var res1 = StartupConnectionTester.ValidateMigration006Schema(false, true, true, true, true, "sanitized");
+        Assert.IsFalse(res1.IsSuccess);
+        StringAssert.Contains(res1.ErrorMessage, "006_student_profile_and_class_advisor.sql");
+
+        var res2 = StartupConnectionTester.ValidateMigration006Schema(true, false, true, true, true, "sanitized");
+        Assert.IsFalse(res2.IsSuccess);
+        StringAssert.Contains(res2.ErrorMessage, "006_student_profile_and_class_advisor.sql");
+
+        var res3 = StartupConnectionTester.ValidateMigration006Schema(true, true, false, true, true, "sanitized");
+        Assert.IsFalse(res3.IsSuccess);
+        StringAssert.Contains(res3.ErrorMessage, "006_student_profile_and_class_advisor.sql");
+
+        var res4 = StartupConnectionTester.ValidateMigration006Schema(true, true, true, false, true, "sanitized");
+        Assert.IsFalse(res4.IsSuccess);
+        StringAssert.Contains(res4.ErrorMessage, "006_student_profile_and_class_advisor.sql");
+
+        var res5 = StartupConnectionTester.ValidateMigration006Schema(true, true, true, true, false, "sanitized");
+        Assert.IsFalse(res5.IsSuccess);
+        StringAssert.Contains(res5.ErrorMessage, "006_student_profile_and_class_advisor.sql");
+
+        var resOk = StartupConnectionTester.ValidateMigration006Schema(true, true, true, true, true, "sanitized");
+        Assert.IsTrue(resOk.IsSuccess);
+    }
 }

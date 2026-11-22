@@ -32,9 +32,9 @@ partial class FrmPhongHocEdit
         ((System.ComponentModel.ISupportInitialize)nudSucChua).BeginInit();
         ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
         SuspendLayout();
-        // 
+        //
         // lblTitle
-        // 
+        //
         lblTitle.AutoSize = true;
         lblTitle.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point);
         lblTitle.ForeColor = Color.FromArgb(30, 64, 175);
@@ -43,9 +43,9 @@ partial class FrmPhongHocEdit
         lblTitle.Size = new Size(230, 25);
         lblTitle.TabIndex = 0;
         lblTitle.Text = "THÔNG TIN PHÒNG HỌC";
-        // 
+        //
         // lblMaPhong
-        // 
+        //
         lblMaPhong.AutoSize = true;
         lblMaPhong.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point);
         lblMaPhong.Location = new Point(25, 65);
@@ -53,16 +53,16 @@ partial class FrmPhongHocEdit
         lblMaPhong.Size = new Size(128, 17);
         lblMaPhong.TabIndex = 1;
         lblMaPhong.Text = "Mã phòng học (*):";
-        // 
+        //
         // txtMaPhong
-        // 
+        //
         txtMaPhong.Location = new Point(25, 88);
         txtMaPhong.Name = "txtMaPhong";
         txtMaPhong.Size = new Size(220, 23);
         txtMaPhong.TabIndex = 2;
-        // 
+        //
         // lblTenPhong
-        // 
+        //
         lblTenPhong.AutoSize = true;
         lblTenPhong.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point);
         lblTenPhong.Location = new Point(265, 65);
@@ -70,16 +70,16 @@ partial class FrmPhongHocEdit
         lblTenPhong.Size = new Size(131, 17);
         lblTenPhong.TabIndex = 3;
         lblTenPhong.Text = "Tên phòng học (*):";
-        // 
+        //
         // txtTenPhong
-        // 
+        //
         txtTenPhong.Location = new Point(265, 88);
         txtTenPhong.Name = "txtTenPhong";
         txtTenPhong.Size = new Size(250, 23);
         txtTenPhong.TabIndex = 4;
-        // 
+        //
         // lblSucChua
-        // 
+        //
         lblSucChua.AutoSize = true;
         lblSucChua.Font = new Font("Segoe UI", 9.5F, FontStyle.Regular, GraphicsUnit.Point);
         lblSucChua.Location = new Point(25, 125);
@@ -87,9 +87,9 @@ partial class FrmPhongHocEdit
         lblSucChua.Size = new Size(140, 17);
         lblSucChua.TabIndex = 5;
         lblSucChua.Text = "Sức chứa (học viên) (*):";
-        // 
+        //
         // nudSucChua
-        // 
+        //
         nudSucChua.Location = new Point(25, 148);
         nudSucChua.Maximum = new decimal(new int[] { 500, 0, 0, 0 });
         nudSucChua.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
@@ -97,9 +97,9 @@ partial class FrmPhongHocEdit
         nudSucChua.Size = new Size(220, 23);
         nudSucChua.TabIndex = 6;
         nudSucChua.Value = new decimal(new int[] { 35, 0, 0, 0 });
-        // 
+        //
         // lblTrangThai
-        // 
+        //
         lblTrangThai.AutoSize = true;
         lblTrangThai.Font = new Font("Segoe UI", 9.5F, FontStyle.Regular, GraphicsUnit.Point);
         lblTrangThai.Location = new Point(265, 125);
@@ -107,18 +107,18 @@ partial class FrmPhongHocEdit
         lblTrangThai.Size = new Size(69, 17);
         lblTrangThai.TabIndex = 7;
         lblTrangThai.Text = "Trạng thái:";
-        // 
+        //
         // cboTrangThai
-        // 
+        //
         cboTrangThai.DropDownStyle = ComboBoxStyle.DropDownList;
         cboTrangThai.FormattingEnabled = true;
         cboTrangThai.Location = new Point(265, 148);
         cboTrangThai.Name = "cboTrangThai";
         cboTrangThai.Size = new Size(250, 23);
         cboTrangThai.TabIndex = 8;
-        // 
+        //
         // btnSave
-        // 
+        //
         btnSave.BackColor = Color.FromArgb(30, 64, 175);
         btnSave.Cursor = Cursors.Hand;
         btnSave.FlatAppearance.BorderSize = 0;
@@ -132,9 +132,9 @@ partial class FrmPhongHocEdit
         btnSave.Text = "Lưu lại";
         btnSave.UseVisualStyleBackColor = false;
         btnSave.Click += btnSave_Click;
-        // 
+        //
         // btnCancel
-        // 
+        //
         btnCancel.BackColor = Color.FromArgb(229, 231, 235);
         btnCancel.Cursor = Cursors.Hand;
         btnCancel.FlatAppearance.BorderSize = 0;
@@ -148,22 +148,22 @@ partial class FrmPhongHocEdit
         btnCancel.Text = "Hủy bỏ";
         btnCancel.UseVisualStyleBackColor = false;
         btnCancel.Click += btnCancel_Click;
-        // 
+        //
         // errorProvider
-        // 
+        //
         errorProvider.BlinkStyle = ErrorBlinkStyle.NeverBlink;
         errorProvider.ContainerControl = this;
-        // 
+        //
         // lblError
-        // 
+        //
         lblError.ForeColor = Color.FromArgb(220, 38, 38);
         lblError.Location = new Point(25, 185);
         lblError.Name = "lblError";
         lblError.Size = new Size(490, 20);
         lblError.TabIndex = 11;
-        // 
+        //
         // FrmPhongHocEdit
-        // 
+        //
         AcceptButton = btnSave;
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;

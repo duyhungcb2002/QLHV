@@ -1,6 +1,7 @@
 using QLHV.Contracts.Enums;
 using QLHV.Core.Security;
 using QLHV.Core.Services;
+using QLHV.WinForms.Configuration;
 
 namespace QLHV.WinForms.Forms;
 
@@ -14,6 +15,8 @@ public partial class FrmMain : Form
     private readonly IKhoaHocService _khoaHocService;
     private readonly IKhoaHocMonHocService _khoaHocMonHocService;
     private readonly IPhongHocService _phongHocService;
+    private readonly OperationsServiceBundle _operationsBundle;
+    private readonly Core.Repositories.ITaiKhoanRepository? _taiKhoanRepository;
 
     private Form? _currentChildForm;
     private Button? _activeMenuButton;
@@ -29,7 +32,9 @@ public partial class FrmMain : Form
         IKhoaHocService khoaHocService,
         IKhoaHocMonHocService khoaHocMonHocService,
         IPhongHocService phongHocService,
-        string environmentName)
+        OperationsServiceBundle operationsBundle,
+        string environmentName,
+        Core.Repositories.ITaiKhoanRepository? taiKhoanRepository = null)
     {
         InitializeComponent();
         _currentUserService = currentUserService;
@@ -40,10 +45,13 @@ public partial class FrmMain : Form
         _khoaHocService = khoaHocService;
         _khoaHocMonHocService = khoaHocMonHocService;
         _phongHocService = phongHocService;
+        _operationsBundle = operationsBundle;
+        _taiKhoanRepository = taiKhoanRepository;
 
         SetupUserInfo();
         ConfigureMenuPermissions();
         UpdateEnvironmentBadge(environmentName);
+        ConfigureMenuHoverEffects();
 
         // Mở màn hình danh mục học viên mặc định nếu có quyền
         Load += (_, _) =>
@@ -95,6 +103,35 @@ public partial class FrmMain : Form
         btnMenuBaoCao.Visible = _currentUserService.HasPermission(Permission.ReportView);
     }
 
+    private void ConfigureMenuHoverEffects()
+    {
+        Button[] menuButtons =
+        [
+            btnMenuHocVien, btnMenuGiangVien, btnMenuMonHoc, btnMenuKhoaHoc, btnMenuPhongHoc,
+            btnMenuDaoTao, btnMenuDiem, btnMenuHocPhi, btnMenuBaoCao
+        ];
+
+        foreach (var btn in menuButtons)
+        {
+            btn.MouseEnter += (s, e) =>
+            {
+                if (btn != _activeMenuButton)
+                {
+                    btn.BackColor = Color.FromArgb(31, 41, 55);
+                    btn.ForeColor = Color.White;
+                }
+            };
+            btn.MouseLeave += (s, e) =>
+            {
+                if (btn != _activeMenuButton)
+                {
+                    btn.BackColor = Color.FromArgb(17, 24, 39);
+                    btn.ForeColor = Color.FromArgb(156, 163, 175);
+                }
+            };
+        }
+    }
+
     private void ShowChildForm(Form childForm, string title, Button menuButton)
     {
         // Tránh mở lặp nhiều bản của cùng một form
@@ -128,15 +165,19 @@ public partial class FrmMain : Form
         if (_activeMenuButton != null)
         {
             _activeMenuButton.BackColor = Color.FromArgb(17, 24, 39);
+            _activeMenuButton.ForeColor = Color.FromArgb(156, 163, 175);
+            _activeMenuButton.Font = new Font("Segoe UI", 9.5F, FontStyle.Regular, GraphicsUnit.Point);
         }
 
         _activeMenuButton = button;
-        _activeMenuButton.BackColor = Color.FromArgb(31, 41, 55);
+        _activeMenuButton.BackColor = Color.FromArgb(37, 99, 235); // Blue 600 - Rõ ràng, hiện đại
+        _activeMenuButton.ForeColor = Color.White;
+        _activeMenuButton.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point);
     }
 
     private void btnMenuHocVien_Click(object? sender, EventArgs e)
     {
-        var form = new FrmHocVien(_hocVienService, _currentUserService);
+        var form = new FrmHocVien(_hocVienService, _currentUserService, _taiKhoanRepository, _operationsBundle.DangKyLopHocService);
         ShowChildForm(form, "Danh mục / Quản lý Học viên", btnMenuHocVien);
     }
 
@@ -166,44 +207,48 @@ public partial class FrmMain : Form
 
     private void btnMenuDaoTao_Click(object? sender, EventArgs e)
     {
-        MessageBox.Show(
-            "Phân hệ Đào tạo (Lớp học, Lịch học, Xếp lớp) do thành viên BÁ HIỆP phụ trách.\nTrạng thái hiện tại: [PENDING INTEGRATION]",
-            "Chức năng đang chờ tích hợp",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Information);
+        var form = new FrmDaoTao(
+            _operationsBundle.LopHocService,
+            _operationsBundle.DangKyLopHocService,
+            _operationsBundle.LichHocService,
+            _khoaHocService,
+            _hocVienService,
+            _monHocService,
+            _giangVienService,
+            _phongHocService,
+            _currentUserService);
+        ShowChildForm(form, "Quản lý Đào tạo / Lớp học, Xếp lớp & Lịch học", btnMenuDaoTao);
     }
 
     private void btnMenuDiem_Click(object? sender, EventArgs e)
     {
-        MessageBox.Show(
-            "Phân hệ Điểm số (Nhập điểm, Đánh giá kết quả) do thành viên BÁ HIỆP phụ trách.\nTrạng thái hiện tại: [PENDING INTEGRATION]",
-            "Chức năng đang chờ tích hợp",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Information);
+        var form = new FrmDiem(
+            _operationsBundle.KetQuaHocTapService,
+            _operationsBundle.LopHocService,
+            _monHocService,
+            _currentUserService);
+        ShowChildForm(form, "Quản lý Điểm số & Đánh giá kết quả học tập", btnMenuDiem);
     }
 
     private void btnMenuHocPhi_Click(object? sender, EventArgs e)
     {
-        MessageBox.Show(
-            "Phân hệ Học phí (Thu học phí, Công nợ, Phiếu thu) do thành viên BÁ HIỆP phụ trách.\nTrạng thái hiện tại: [PENDING INTEGRATION]",
-            "Chức năng đang chờ tích hợp",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Information);
+        var form = new FrmHocPhi(
+            _operationsBundle.HocPhiService,
+            _operationsBundle.LopHocService,
+            _operationsBundle.DangKyLopHocService,
+            _currentUserService);
+        ShowChildForm(form, "Quản lý Học phí / Thu học phí & Công nợ", btnMenuHocPhi);
     }
 
     private void btnMenuBaoCao_Click(object? sender, EventArgs e)
     {
-        var choice = MessageBox.Show(
-            "Phân hệ Báo cáo & Thống kê do thành viên CHU ĐỨC phụ trách (đang chờ tích hợp CSDL).\n\nBạn có muốn mở mẫu giao diện báo cáo chuẩn (FrmBaoCaoMau) để xem thử không?",
-            "Chức năng đang chờ tích hợp",
-            MessageBoxButtons.YesNo,
-            MessageBoxIcon.Question);
-
-        if (choice == DialogResult.Yes)
-        {
-            var form = new FrmBaoCaoMau();
-            ShowChildForm(form, "Báo cáo / Mẫu giao diện thống kê", btnMenuBaoCao);
-        }
+        var form = new FrmBaoCao(
+            _operationsBundle.BaoCaoService,
+            _operationsBundle.LopHocService,
+            _monHocService,
+            _giangVienService,
+            _currentUserService);
+        ShowChildForm(form, "Báo cáo thống kê Đào tạo, Kết quả & Tài chính", btnMenuBaoCao);
     }
 
     private async void btnLogout_Click(object? sender, EventArgs e)

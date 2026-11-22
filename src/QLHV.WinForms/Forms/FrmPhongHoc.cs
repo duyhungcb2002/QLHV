@@ -2,6 +2,7 @@ using QLHV.Contracts.Dtos;
 using QLHV.Contracts.Enums;
 using QLHV.Core.Security;
 using QLHV.Core.Services;
+using QLHV.WinForms.Configuration;
 
 namespace QLHV.WinForms.Forms;
 
@@ -30,6 +31,7 @@ public partial class FrmPhongHoc : Form
 
     private void ConfigureGrid()
     {
+        dgvPhongHoc.ApplyStandardGridStyle();
         dgvPhongHoc.AutoGenerateColumns = false;
         dgvPhongHoc.CellFormatting += (s, e) =>
         {

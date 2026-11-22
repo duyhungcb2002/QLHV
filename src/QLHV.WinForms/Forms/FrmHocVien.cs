@@ -1,7 +1,9 @@
 using QLHV.Contracts.Dtos;
 using QLHV.Contracts.Enums;
+using QLHV.Core.Repositories;
 using QLHV.Core.Security;
 using QLHV.Core.Services;
+using QLHV.WinForms.Configuration;
 
 namespace QLHV.WinForms.Forms;
 
@@ -9,14 +11,22 @@ public partial class FrmHocVien : Form
 {
     private readonly IHocVienService _service;
     private readonly ICurrentUserService _currentUserService;
+    private readonly ITaiKhoanRepository? _taiKhoanRepository;
+    private readonly IDangKyLopHocService? _dangKyService;
     private readonly bool _canManage;
     private IReadOnlyList<HocVienDto> _cachedList = Array.Empty<HocVienDto>();
 
-    public FrmHocVien(IHocVienService service, ICurrentUserService currentUserService)
+    public FrmHocVien(
+        IHocVienService service,
+        ICurrentUserService currentUserService,
+        ITaiKhoanRepository? taiKhoanRepository = null,
+        IDangKyLopHocService? dangKyService = null)
     {
         InitializeComponent();
         _service = service;
         _currentUserService = currentUserService;
+        _taiKhoanRepository = taiKhoanRepository;
+        _dangKyService = dangKyService;
         _canManage = _currentUserService.HasPermission(Permission.CatalogManage);
 
         ConfigureGrid();
@@ -30,6 +40,7 @@ public partial class FrmHocVien : Form
 
     private void ConfigureGrid()
     {
+        dgvHocVien.ApplyStandardGridStyle();
         dgvHocVien.AutoGenerateColumns = false;
         dgvHocVien.CellFormatting += (s, e) =>
         {
@@ -38,15 +49,18 @@ public partial class FrmHocVien : Form
                 e.Value = dt.ToString("dd/MM/yyyy");
                 e.FormattingApplied = true;
             }
-            else if (dgvHocVien.Columns[e.ColumnIndex].Name == "colNgayDangKy" && e.Value is DateTime reg)
-            {
-                e.Value = reg.ToString("dd/MM/yyyy");
-                e.FormattingApplied = true;
-            }
             else if (dgvHocVien.Columns[e.ColumnIndex].Name == "colTrangThai" && e.Value is TrangThaiHoatDong st)
             {
                 e.Value = st == TrangThaiHoatDong.DangHoatDong ? "Đang hoạt động" : "Ngừng hoạt động";
                 e.FormattingApplied = true;
+            }
+        };
+
+        dgvHocVien.CellDoubleClick += (s, e) =>
+        {
+            if (e.RowIndex >= 0)
+            {
+                btnDetail_Click(s, e);
             }
         };
     }
@@ -71,6 +85,7 @@ public partial class FrmHocVien : Form
     private void UpdateButtonStates()
     {
         bool hasSelection = dgvHocVien.CurrentRow != null;
+        btnDetail.Enabled = hasSelection;
         btnEdit.Enabled = _canManage && hasSelection;
         btnDeactivate.Enabled = _canManage && hasSelection;
     }
@@ -126,11 +141,21 @@ public partial class FrmHocVien : Form
         await LoadDataAsync();
     }
 
+    private void btnDetail_Click(object? sender, EventArgs e)
+    {
+        if (dgvHocVien.CurrentRow == null) return;
+        var selected = dgvHocVien.CurrentRow.DataBoundItem as HocVienDto;
+        if (selected == null) return;
+
+        using var detailForm = new FrmHocVienDetail(selected, _currentUserService, _dangKyService);
+        detailForm.ShowDialog(this);
+    }
+
     private async void btnAdd_Click(object? sender, EventArgs e)
     {
         if (!_canManage) return;
 
-        using var editForm = new FrmHocVienEdit(_service);
+        using var editForm = new FrmHocVienEdit(_service, null, _taiKhoanRepository);
         if (editForm.ShowDialog(this) == DialogResult.OK)
         {
             await LoadDataAsync();
@@ -144,7 +169,7 @@ public partial class FrmHocVien : Form
         var selected = dgvHocVien.CurrentRow.DataBoundItem as HocVienDto;
         if (selected == null) return;
 
-        using var editForm = new FrmHocVienEdit(_service, selected);
+        using var editForm = new FrmHocVienEdit(_service, selected, _taiKhoanRepository);
         if (editForm.ShowDialog(this) == DialogResult.OK)
         {
             await LoadDataAsync();

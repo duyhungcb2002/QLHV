@@ -41,9 +41,9 @@ partial class FrmMain
         pnlBrand.SuspendLayout();
         pnlTopBar.SuspendLayout();
         SuspendLayout();
-        // 
+        //
         // pnlSidebar
-        // 
+        //
         pnlSidebar.BackColor = Color.FromArgb(17, 24, 39);
         pnlSidebar.Controls.Add(btnLogout);
         pnlSidebar.Controls.Add(btnMenuBaoCao);
@@ -62,9 +62,9 @@ partial class FrmMain
         pnlSidebar.Name = "pnlSidebar";
         pnlSidebar.Size = new Size(230, 680);
         pnlSidebar.TabIndex = 0;
-        // 
+        //
         // btnLogout
-        // 
+        //
         btnLogout.BackColor = Color.FromArgb(220, 38, 38);
         btnLogout.Cursor = Cursors.Hand;
         btnLogout.Dock = DockStyle.Bottom;
@@ -79,9 +79,9 @@ partial class FrmMain
         btnLogout.Text = "🚪 Đăng xuất";
         btnLogout.UseVisualStyleBackColor = false;
         btnLogout.Click += btnLogout_Click;
-        // 
+        //
         // btnMenuBaoCao
-        // 
+        //
         btnMenuBaoCao.Cursor = Cursors.Hand;
         btnMenuBaoCao.Dock = DockStyle.Top;
         btnMenuBaoCao.FlatAppearance.BorderSize = 0;
@@ -93,13 +93,13 @@ partial class FrmMain
         btnMenuBaoCao.Padding = new Padding(20, 0, 0, 0);
         btnMenuBaoCao.Size = new Size(230, 38);
         btnMenuBaoCao.TabIndex = 10;
-        btnMenuBaoCao.Text = "📊 Báo cáo [Chờ tích hợp]";
+        btnMenuBaoCao.Text = "📊 Báo cáo";
         btnMenuBaoCao.TextAlign = ContentAlignment.MiddleLeft;
         btnMenuBaoCao.UseVisualStyleBackColor = true;
         btnMenuBaoCao.Click += btnMenuBaoCao_Click;
-        // 
+        //
         // btnMenuHocPhi
-        // 
+        //
         btnMenuHocPhi.Cursor = Cursors.Hand;
         btnMenuHocPhi.Dock = DockStyle.Top;
         btnMenuHocPhi.FlatAppearance.BorderSize = 0;
@@ -111,13 +111,13 @@ partial class FrmMain
         btnMenuHocPhi.Padding = new Padding(20, 0, 0, 0);
         btnMenuHocPhi.Size = new Size(230, 38);
         btnMenuHocPhi.TabIndex = 9;
-        btnMenuHocPhi.Text = "💰 Học phí [Chờ tích hợp]";
+        btnMenuHocPhi.Text = "💰 Học phí";
         btnMenuHocPhi.TextAlign = ContentAlignment.MiddleLeft;
         btnMenuHocPhi.UseVisualStyleBackColor = true;
         btnMenuHocPhi.Click += btnMenuHocPhi_Click;
-        // 
+        //
         // btnMenuDiem
-        // 
+        //
         btnMenuDiem.Cursor = Cursors.Hand;
         btnMenuDiem.Dock = DockStyle.Top;
         btnMenuDiem.FlatAppearance.BorderSize = 0;
@@ -129,13 +129,13 @@ partial class FrmMain
         btnMenuDiem.Padding = new Padding(20, 0, 0, 0);
         btnMenuDiem.Size = new Size(230, 38);
         btnMenuDiem.TabIndex = 8;
-        btnMenuDiem.Text = "📝 Điểm số [Chờ tích hợp]";
+        btnMenuDiem.Text = "📝 Điểm số";
         btnMenuDiem.TextAlign = ContentAlignment.MiddleLeft;
         btnMenuDiem.UseVisualStyleBackColor = true;
         btnMenuDiem.Click += btnMenuDiem_Click;
-        // 
+        //
         // btnMenuDaoTao
-        // 
+        //
         btnMenuDaoTao.Cursor = Cursors.Hand;
         btnMenuDaoTao.Dock = DockStyle.Top;
         btnMenuDaoTao.FlatAppearance.BorderSize = 0;
@@ -147,13 +147,13 @@ partial class FrmMain
         btnMenuDaoTao.Padding = new Padding(20, 0, 0, 0);
         btnMenuDaoTao.Size = new Size(230, 38);
         btnMenuDaoTao.TabIndex = 7;
-        btnMenuDaoTao.Text = "🎓 Đào tạo [Chờ tích hợp]";
+        btnMenuDaoTao.Text = "🎓 Đào tạo";
         btnMenuDaoTao.TextAlign = ContentAlignment.MiddleLeft;
         btnMenuDaoTao.UseVisualStyleBackColor = true;
         btnMenuDaoTao.Click += btnMenuDaoTao_Click;
-        // 
+        //
         // btnMenuPhongHoc
-        // 
+        //
         btnMenuPhongHoc.Cursor = Cursors.Hand;
         btnMenuPhongHoc.Dock = DockStyle.Top;
         btnMenuPhongHoc.FlatAppearance.BorderSize = 0;
@@ -169,9 +169,9 @@ partial class FrmMain
         btnMenuPhongHoc.TextAlign = ContentAlignment.MiddleLeft;
         btnMenuPhongHoc.UseVisualStyleBackColor = true;
         btnMenuPhongHoc.Click += btnMenuPhongHoc_Click;
-        // 
+        //
         // btnMenuKhoaHoc
-        // 
+        //
         btnMenuKhoaHoc.Cursor = Cursors.Hand;
         btnMenuKhoaHoc.Dock = DockStyle.Top;
         btnMenuKhoaHoc.FlatAppearance.BorderSize = 0;
@@ -187,9 +187,9 @@ partial class FrmMain
         btnMenuKhoaHoc.TextAlign = ContentAlignment.MiddleLeft;
         btnMenuKhoaHoc.UseVisualStyleBackColor = true;
         btnMenuKhoaHoc.Click += btnMenuKhoaHoc_Click;
-        // 
+        //
         // btnMenuMonHoc
-        // 
+        //
         btnMenuMonHoc.Cursor = Cursors.Hand;
         btnMenuMonHoc.Dock = DockStyle.Top;
         btnMenuMonHoc.FlatAppearance.BorderSize = 0;
@@ -205,9 +205,9 @@ partial class FrmMain
         btnMenuMonHoc.TextAlign = ContentAlignment.MiddleLeft;
         btnMenuMonHoc.UseVisualStyleBackColor = true;
         btnMenuMonHoc.Click += btnMenuMonHoc_Click;
-        // 
+        //
         // btnMenuGiangVien
-        // 
+        //
         btnMenuGiangVien.Cursor = Cursors.Hand;
         btnMenuGiangVien.Dock = DockStyle.Top;
         btnMenuGiangVien.FlatAppearance.BorderSize = 0;
@@ -223,9 +223,9 @@ partial class FrmMain
         btnMenuGiangVien.TextAlign = ContentAlignment.MiddleLeft;
         btnMenuGiangVien.UseVisualStyleBackColor = true;
         btnMenuGiangVien.Click += btnMenuGiangVien_Click;
-        // 
+        //
         // btnMenuHocVien
-        // 
+        //
         btnMenuHocVien.Cursor = Cursors.Hand;
         btnMenuHocVien.Dock = DockStyle.Top;
         btnMenuHocVien.FlatAppearance.BorderSize = 0;
@@ -241,9 +241,9 @@ partial class FrmMain
         btnMenuHocVien.TextAlign = ContentAlignment.MiddleLeft;
         btnMenuHocVien.UseVisualStyleBackColor = true;
         btnMenuHocVien.Click += btnMenuHocVien_Click;
-        // 
+        //
         // pnlUserCard
-        // 
+        //
         pnlUserCard.BackColor = Color.FromArgb(31, 41, 55);
         pnlUserCard.Controls.Add(lblRole);
         pnlUserCard.Controls.Add(lblUsername);
@@ -252,9 +252,9 @@ partial class FrmMain
         pnlUserCard.Name = "pnlUserCard";
         pnlUserCard.Size = new Size(230, 96);
         pnlUserCard.TabIndex = 1;
-        // 
+        //
         // lblRole
-        // 
+        //
         lblRole.AutoSize = true;
         lblRole.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold, GraphicsUnit.Point);
         lblRole.ForeColor = Color.FromArgb(52, 211, 153);
@@ -263,9 +263,9 @@ partial class FrmMain
         lblRole.Size = new Size(95, 15);
         lblRole.TabIndex = 1;
         lblRole.Text = "Vai trò: ADMIN";
-        // 
+        //
         // lblUsername
-        // 
+        //
         lblUsername.AutoSize = true;
         lblUsername.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point);
         lblUsername.ForeColor = Color.White;
@@ -274,9 +274,9 @@ partial class FrmMain
         lblUsername.Size = new Size(137, 17);
         lblUsername.TabIndex = 0;
         lblUsername.Text = "👤 Tài khoản: admin";
-        // 
+        //
         // pnlBrand
-        // 
+        //
         pnlBrand.BackColor = Color.FromArgb(30, 64, 175);
         pnlBrand.Controls.Add(lblAppSub);
         pnlBrand.Controls.Add(lblAppTitle);
@@ -285,9 +285,9 @@ partial class FrmMain
         pnlBrand.Name = "pnlBrand";
         pnlBrand.Size = new Size(230, 70);
         pnlBrand.TabIndex = 0;
-        // 
+        //
         // lblAppSub
-        // 
+        //
         lblAppSub.AutoSize = true;
         lblAppSub.Font = new Font("Segoe UI", 8F, FontStyle.Regular, GraphicsUnit.Point);
         lblAppSub.ForeColor = Color.FromArgb(219, 234, 254);
@@ -296,9 +296,9 @@ partial class FrmMain
         lblAppSub.Size = new Size(130, 13);
         lblAppSub.TabIndex = 1;
         lblAppSub.Text = "Quản lý đào tạo học viên";
-        // 
+        //
         // lblAppTitle
-        // 
+        //
         lblAppTitle.AutoSize = true;
         lblAppTitle.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
         lblAppTitle.ForeColor = Color.White;
@@ -307,9 +307,9 @@ partial class FrmMain
         lblAppTitle.Size = new Size(135, 21);
         lblAppTitle.TabIndex = 0;
         lblAppTitle.Text = "HỆ THỐNG QLHV";
-        // 
+        //
         // pnlTopBar
-        // 
+        //
         pnlTopBar.BackColor = Color.White;
         pnlTopBar.Controls.Add(lblEnvBadge);
         pnlTopBar.Controls.Add(lblActiveViewTitle);
@@ -318,9 +318,9 @@ partial class FrmMain
         pnlTopBar.Name = "pnlTopBar";
         pnlTopBar.Size = new Size(950, 50);
         pnlTopBar.TabIndex = 1;
-        // 
+        //
         // lblEnvBadge
-        // 
+        //
         lblEnvBadge.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         lblEnvBadge.AutoSize = true;
         lblEnvBadge.BackColor = Color.FromArgb(254, 243, 199);
@@ -332,9 +332,9 @@ partial class FrmMain
         lblEnvBadge.Size = new Size(195, 19);
         lblEnvBadge.TabIndex = 1;
         lblEnvBadge.Text = "Môi trường: Fake Data In-Memory";
-        // 
+        //
         // lblActiveViewTitle
-        // 
+        //
         lblActiveViewTitle.AutoSize = true;
         lblActiveViewTitle.Font = new Font("Segoe UI", 11F, FontStyle.Bold, GraphicsUnit.Point);
         lblActiveViewTitle.ForeColor = Color.FromArgb(30, 41, 59);
@@ -343,18 +343,18 @@ partial class FrmMain
         lblActiveViewTitle.Size = new Size(160, 20);
         lblActiveViewTitle.TabIndex = 0;
         lblActiveViewTitle.Text = "Trang chủ / Danh mục";
-        // 
+        //
         // pnlContent
-        // 
+        //
         pnlContent.BackColor = Color.FromArgb(243, 244, 246);
         pnlContent.Dock = DockStyle.Fill;
         pnlContent.Location = new Point(230, 50);
         pnlContent.Name = "pnlContent";
         pnlContent.Size = new Size(950, 630);
         pnlContent.TabIndex = 2;
-        // 
+        //
         // FrmMain
-        // 
+        //
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(1180, 680);
